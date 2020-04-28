@@ -9,51 +9,60 @@
 #include <variant>
 #include <optional>
 
-enum class JValueType {
-    String,
-    Int,
-    Double,
-    Boolean,
-    Null,
-    Object,
-    Array
-};
+namespace jsoncpp 
+{
 
-class JValue {
-    public:        
-        JValue();
+    enum class JValueType {
+        String,
+        Int,
+        Double,
+        Boolean,
+        Null,
+        Object,
+        Array
+    };
 
-        /*//warning - a copy is recursive and copies all children
-        //it's very expensive
-        explicit JValue(const JValue& other);*/
+    class JValue {
+        public:        
+            JValue();
 
-        //can only be moved        
-        JValue(JValue&& other) = default;
+            /*//warning - a copy is recursive and copies all children
+            //it's very expensive
+            explicit JValue(const JValue& other);*/
 
-        std::optional<std::string> GetStringValue() const;
-        std::optional<int>    GetIntValue() const;
-        std::optional<double> GetDoubleValue() const;
-        std::optional<bool>   GetBooleanValue() const;
+            //can only be moved        
+            JValue(JValue&& other) = default;
 
-        std::string GetName() const { return name_; }
-        JValueType  GetValueType() const { return value_type_; }             
-        size_t      GetSize() const { return children_.size(); }
-        const auto& GetChildren() const { return children_; }
+            std::optional<std::string> GetStringValue() const;
+            std::optional<int>    GetIntValue() const;
+            std::optional<double> GetDoubleValue() const;
+            std::optional<bool>   GetBooleanValue() const;
 
-        bool RemoveChild(size_t index);
-        bool RemoveChild(string name);
+            std::string GetName() const { return name_; }
+            JValueType  GetValueType() const { return value_type_; }             
+            size_t      GetSize() const { return children_.size(); }
+            const auto& GetChildren() const { return children_; }
+            bool        HasProperty(std::string name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
 
-        const JValue& operator[](size_t index) const { return *children_[index]; }
-        const JValue& operator[](const std::string& name) { return this[children_name_indexes_[name]]; }
-        
-        auto begin() const { return children_.begin(); }
-        auto end() const { return children_.end(); }
-    private:
-        std::string name_;
-        JValueType value_type_;
-        std::vector<std::unique_ptr<JValue>> children_;
-        std::unordered_map<std::string, size_t> children_name_indexes_;
-        std::variant<std::string, int, double, bool> value_;
-};
+            //returns true if the element exists, false otherwise
+            bool RemoveChild(size_t index);
+            //returns true if the element exists, false otherwise
+            bool RemoveChild(string name);
+
+            //get the nth child element, either object property or array item
+            const JValue& operator[](size_t index) const { return *children_[index]; }
+            //get an object property by name
+            const JValue& operator[](const std::string& name) { return this[children_name_indexes_[name]]; }
+            
+            auto begin() const { return children_.begin(); }
+            auto end() const { return children_.end(); }
+        private:
+            std::string name_;
+            JValueType value_type_;
+            std::vector<std::unique_ptr<JValue>> children_;
+            std::unordered_map<std::string, size_t> children_name_indexes_;
+            std::variant<std::string, int, double, bool> value_;
+    };
+}
 
 #endif
