@@ -1,5 +1,5 @@
 #ifndef JSONCPP_JVALUE_H_
-#define JSONCPP_JVAULE_H_
+#define JSONCPP_JVALUE_H_
 
 #include <string>
 #include <vector>
@@ -47,7 +47,7 @@ namespace jsoncpp
             //returns true if the element exists, false otherwise
             bool RemoveChild(size_t index);
             //returns true if the element exists, false otherwise
-            bool RemoveChild(string name);
+            bool RemoveChild(std::string name);
 
             //get the nth child element, either object property or array item
             const JValue& operator[](size_t index) const { return *children_[index]; }
