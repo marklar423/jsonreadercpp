@@ -4,12 +4,13 @@ using std::string;
 
 namespace jsoncpp 
 {    
-    JValue::JValue() 
+    JValue::JValue(JValueType value_type, 
+                    std::variant<std::string, int, double, bool> value) 
             : name_(""), 
-                value_type_(JValueType::Null),
+                value_type_(value_type),
                 children_(), 
-                children_name_indexes_(), 
-                value_()
+                children_name_indexes_(),
+                value_(value)
     {
     }
 
@@ -67,13 +68,47 @@ namespace jsoncpp
         return {}; 
     }
 
+        
+    bool JValue::AddArrayChild(std::unique_ptr<JValue> value)
+    {
+        bool success = false;
+
+        if (this->value_type_ == JValueType::Array)
+        {
+            success = true;
+            this->children_.push_back(std::move(value));
+        }
+
+        return success;
+    }
+    
+    
+    bool JValue::AddObjectChild(std::string name, std::unique_ptr<JValue> value)
+    {
+        bool success = false;
+
+        if (this->value_type_ == JValueType::Object && name.length() > 0 && !this->HasProperty(name))
+        {
+            success = true;
+            value->name_ = name;
+            this->children_.push_back(std::move(value));
+            this->children_name_indexes_[name] = this->children_.size() - 1;
+        }
+
+        return success;
+    }
+
     bool JValue::RemoveChild(size_t index)
     {
         bool exists = false;
         if (index < this->children_.size())
         {
-            exists = true;
+            exists = true;            
+            string child_name = this->children_[index]->name_;
             this->children_.erase(this->children_.begin() + index);
+
+            if (this->children_name_indexes_.find(child_name) != this->children_name_indexes_.end())
+                this->children_name_indexes_.erase(child_name);
         }
         return exists;
     }

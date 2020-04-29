@@ -16,7 +16,5 @@ int main(int argc, char *argv[])
 	JsonDeserializer parser;
 	auto parsed_json = parser.ParseJsonString(input_file);
 
-	cout << parsed_json << "\n";
-
 	return 0;
 }

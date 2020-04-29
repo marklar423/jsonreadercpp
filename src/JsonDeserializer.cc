@@ -12,7 +12,7 @@ namespace jsoncpp
 {
     unique_ptr<JValue> JsonDeserializer::ParseJsonString(const string& json_text) 
     {
-        auto root = std::make_unique<JValue>();
+        auto root = std::make_unique<JValue>(new JValue(JValueType::Object));
                 
         string copy_json = json_text;
         int max = copy_json.length() - 1;
