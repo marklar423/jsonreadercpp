@@ -2,19 +2,25 @@
 #define JSONCPP_JSONDESERIALIZER_H_
 
 #include <string>
+#include <unordered_map>
+#include <memory>
+#include <sstream>
 
 #include "JValue.h"
+#include "ParserState.h"
 
 namespace jsoncpp {
 
     class JsonDeserializer {
 
     public:
-        std::unique_ptr<JValue> ParseJsonString(const std::string& json_text);
+        JsonDeserializer();
+
+        std::unique_ptr<JValue> ParseJsonString(std::istringstream& input);
 
 
     private:
-
+        std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> states_;
 
     };
 
