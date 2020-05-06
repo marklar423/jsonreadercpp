@@ -1,20 +1,43 @@
 #ifndef JSONCPP_PARSERSTATE_H
 #define JSONCPP_PARSERSTATE_H
 
+#include <sstream>
+#include <stack>
+#include <memory>
+
+#include "JValue.h"
+
 namespace jsoncpp {
     
-    enum class ParserStateType {
+    enum class ParserStateType 
+    {
         Same,
         Error,
-        PopEnd,
         Root,
-        PushObjectProperty,
+        ObjectProperty,
+        ArrayElement,
+        StringValue,
+        IntValue,
+        DoubleValue,
+        NullValue,
+        TrueValue,
+        FalseValue        
+    };
+    
+    struct ParserStateData 
+    {
+        std::stringstream property_name;
+        std::stringstream scalar_value;
+        std::stack<std::unique_ptr<JValue>> value_stack;
+
+        ParserStateData() : property_name(), scalar_value(), value_stack() {}
     };
 
-    class ParserState {
-
+    class ParserState
+    {
         public:
-            virtual ParserStateType ProcessChar(char c) = 0;
+
+            virtual ParserStateType ProcessChar(char c, ParserStateData& data) = 0;
 
             bool IsWhiteSpace(char c)
             {

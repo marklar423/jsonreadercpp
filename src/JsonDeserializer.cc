@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "ParserStateRoot.h"
+#include "ParserStateImpls.h"
 
 using std::string;
 using std::unique_ptr;
@@ -15,7 +15,7 @@ namespace jsoncpp
 
     unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istringstream& input) 
     {
-        auto root = std::make_unique<JValue>(new JValue( JValueType::Object ));
+        ParserStateData data {};
         
         auto state_type = ParserStateType::Root;
         char c;
@@ -30,7 +30,7 @@ namespace jsoncpp
             {
                 auto& state = states_[state_type];
                 auto last_state_type = state_type;
-                state_type = state->ProcessChar(c);
+                state_type = state->ProcessChar(c, data);
                 
                 if (state_type == ParserStateType::Same)
                 {
@@ -41,14 +41,23 @@ namespace jsoncpp
                     std::cerr << "Error parsing!\n";
                     exit(1);
                 }
-                else if (state_type == ParserStateType::PopEnd)
-                {
-                    return root;
-                }
             }
         }
 
-        return root;
+        unique_ptr<JValue> result(nullptr);
+
+        if (data.value_stack.size() > 1)
+        {
+            std::cerr << "Error parsing! Unexpected end of input, JSON isn't complete\n";
+            exit(1);
+        }
+        else if (data.value_stack.size() == 1)
+        {
+            result = std::move(data.value_stack.top());
+            data.value_stack.pop(); //not really needed but a good habit
+        }
+
+        return result;
     }
 
 }
