@@ -1,6 +1,7 @@
 #include "JsonDeserializer.h"
 
 #include <iostream>
+#include <string>
 
 #include "ParserStateImpls.h"
 
@@ -9,15 +10,15 @@ using std::unique_ptr;
 
 namespace jsoncpp 
 {
-    JsonDeserializer::JsonDeserializer() : states_() {
-        states_[ParserStateType::Root] = std::make_unique<ParserStateRoot>();
+    JsonDeserializer::JsonDeserializer() 
+        : states_(), property_name_(), scalar_value_(), value_stack_() 
+    {        
     }
 
     unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istringstream& input) 
-    {
-        ParserStateData data {};
+    {        
         
-        auto state_type = ParserStateType::Root;
+        auto state_type = ParserStateType::Start;
         char c;
 
         while (input >> c) {
@@ -29,14 +30,8 @@ namespace jsoncpp
             else
             {
                 auto& state = states_[state_type];
-                auto last_state_type = state_type;
-                state_type = state->ProcessChar(c, data);
-                
-                if (state_type == ParserStateType::Same)
-                {
-                    state_type = last_state_type;
-                }            
-                else if (state_type == ParserStateType::Error)
+                               
+                if (state_type == ParserStateType::Error)
                 {
                     std::cerr << "Error parsing!\n";
                     exit(1);
@@ -46,15 +41,15 @@ namespace jsoncpp
 
         unique_ptr<JValue> result(nullptr);
 
-        if (data.value_stack.size() > 1)
+        if (value_stack_.size() > 1)
         {
             std::cerr << "Error parsing! Unexpected end of input, JSON isn't complete\n";
             exit(1);
         }
-        else if (data.value_stack.size() == 1)
+        else if (value_stack_.size() == 1)
         {
-            result = std::move(data.value_stack.top());
-            data.value_stack.pop(); //not really needed but a good habit
+            result = std::move(value_stack_.top());
+            value_stack_.pop(); //not really needed but a good habit
         }
 
         return result;
