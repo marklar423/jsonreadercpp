@@ -20,6 +20,7 @@ namespace jsoncpp
 
     enum class ParserInputSymbol
     {
+        None,
         Whitespace,
         OpenBrace,
         CloseBrace,
@@ -38,12 +39,28 @@ namespace jsoncpp
         Number
     };
 
-    enum ParserStackSymbol
+    enum class ParserStackSymbol
     {
+        None,
         Start,
         OpenBrace,
         OpenBracket,
         Property
+    };
+
+    enum class ParserCharDestination
+    {
+        None,
+        Name,
+        Value
+    };
+
+    enum class ParserValueAction
+    {
+        None,
+        Push,
+        Pop,
+        PushPop
     };
 }
 #endif
