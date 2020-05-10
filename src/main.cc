@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void PrintJsonTree(JValue& root, string prefix) {
+void PrintJsonTree(const JValue& root, string prefix) {
 	int i = 0;
 	if (prefix.length() > 0)
 		prefix += " / ";

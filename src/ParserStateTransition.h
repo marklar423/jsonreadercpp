@@ -28,6 +28,15 @@ namespace jsoncpp
                                 ParserCharDestination char_destination,
                                 ParserValueAction value_action,
                                 JValueType value_pop_type);
+
+
+        ParserStateTransition(const ParserStateTransition& rhs) = default;
+        ParserStateTransition& operator=(const ParserStateTransition& rhs) = default;
+
+        ParserStateTransition(ParserStateTransition&& rsh) = default;        
+        ParserStateTransition& operator=(ParserStateTransition&& rhs) = default;
+
+        ~ParserStateTransition() = default;        
     };
 
 }

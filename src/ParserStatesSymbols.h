@@ -36,7 +36,8 @@ namespace jsoncpp
         AlphaR,
         AlphaT,
         AlphaU,
-        Number
+        Number,
+        Other
     };
 
     enum class ParserStackSymbol

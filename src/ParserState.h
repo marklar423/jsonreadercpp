@@ -11,21 +11,34 @@ namespace jsoncpp
     class ParserState
     {
         public:
+            using TransitionLookup = std::unordered_map<ParserInputSymbol, std::unordered_map<ParserStackSymbol, ParserStateTransition>>;
+
             ParserState(ParserStateType type);
 
-            ParserStateType GetStateType() { return state_type_; }
+            ParserStateType GetStateType() const { return state_type_; }
             
-            virtual const std::unordered_map<ParserInputSymbol, ParserStateTransition>& GetTransitions() { return transitions_; };
+            const TransitionLookup&      GetTransitions()    const { return transitions_; };
+            const ParserStateTransition& GetElseTransition() const { return else_transition_; };
 
-            virtual const ParserStateTransition& GetElseTransition() { return else_transition_; };
+            bool IsNoneInput()    const { return is_none_input_; };
+            bool IsNoneStackPop() const { return is_none_stack_pop_; };
+
+            //returns false if transition is a None input or stack pop, 
+            //and other transitions exist that aren't a None input/stack.
+            //Also returns false in vice versa - transition input/stack isn't None
+            //but this state has a transition that is None input/stack.
+            bool AddTransition(const ParserStateTransition& transition);
 
             virtual ~ParserState() = default;
 
-        protected:
+        private:
             ParserStateType state_type_;
-            std::unordered_map<ParserInputSymbol, ParserStateTransition> transitions_;
-            ParserStateTransition else_transition_;
+            bool is_none_input_;
+            bool is_none_stack_pop_;
 
+        protected:
+            TransitionLookup transitions_;
+            ParserStateTransition else_transition_;
 
     };
 

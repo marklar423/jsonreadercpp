@@ -27,6 +27,8 @@ namespace jsoncpp
             std::stack<std::unique_ptr<JValue>> value_stack_;
 
             constexpr static bool IsWhiteSpace(const char c) { return (c == ' ' || c == '\r' || c == '\r' || c == '\t'); }
+            ParserStateType ProcessState(char input, const std::unique_ptr<ParserState>& state);
+            ParserInputSymbol ClassifyInput(char input);
     };
 }
 #endif
