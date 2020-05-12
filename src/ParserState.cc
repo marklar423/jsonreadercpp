@@ -13,12 +13,25 @@ namespace jsoncpp
     {
     }
 
+    const ParserStateTransition& ParserState::GetTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const
+    {
+        auto find_input = this->transitions_.find(input_symbol);
+        if (find_input != this->transitions_.end())
+        {
+            auto& stack_map = find_input->second;
+            auto find_stack = stack_map.find(stack_symbol);
+            if (find_stack != stack_map.end())
+                return find_stack->second;
+        }
 
-    bool ParserState::AddTransition(const ParserStateTransition& transition)
+        return this->else_transition_;
+    }
+
+    bool ParserState::CanAddTransition(ParserInputSymbol input, ParserStackSymbol stack_pop)
     {
         bool success = true;
 
-        if (transition.input == ParserInputSymbol::None)
+        if (input == ParserInputSymbol::None)
         {
             if (!is_none_input_)
             {
@@ -33,11 +46,11 @@ namespace jsoncpp
             success = !is_none_input_;
         }
 
-        if (success && transition.stack_pop == ParserStackSymbol::None)
+        if (success && stack_pop == ParserStackSymbol::None)
         {
             if (!is_none_stack_pop_)
             {
-                if (transitions_[transition.input].size() == 0)
+                if (transitions_[input].size() == 0)
                     is_none_stack_pop_ = true;
                 else
                     success = false;
@@ -47,6 +60,14 @@ namespace jsoncpp
         {
             success = !is_none_stack_pop_;
         }
+
+        return success;
+    }
+
+
+    bool ParserState::AddTransition(const ParserStateTransition& transition)
+    {
+        bool success = CanAddTransition(transition.input, transition.stack_pop);
 
         if (success)
         {

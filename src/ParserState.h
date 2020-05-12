@@ -20,6 +20,8 @@ namespace jsoncpp
             const TransitionLookup&      GetTransitions()    const { return transitions_; };
             const ParserStateTransition& GetElseTransition() const { return else_transition_; };
 
+            const ParserStateTransition& GetTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const;
+
             bool IsNoneInput()    const { return is_none_input_; };
             bool IsNoneStackPop() const { return is_none_stack_pop_; };
 
@@ -35,6 +37,7 @@ namespace jsoncpp
             ParserStateType state_type_;
             bool is_none_input_;
             bool is_none_stack_pop_;
+            bool CanAddTransition(ParserInputSymbol input, ParserStackSymbol stack_pop);
 
         protected:
             TransitionLookup transitions_;
