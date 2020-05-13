@@ -11,7 +11,8 @@ using std::unique_ptr;
 namespace jsoncpp 
 {
     JsonDeserializer::JsonDeserializer() 
-        : states_(), property_name_(), scalar_value_(), value_stack_() 
+        : states_(std::move(jsoncpp::CreateStatesMap())), 
+            property_name_(), scalar_value_(), value_stack_() 
     {        
     }
 
@@ -74,7 +75,7 @@ namespace jsoncpp
 
     ParserStateType JsonDeserializer::ProcessState(char input, const unique_ptr<ParserState>& state)
     {
-        ParserInputSymbol input_symbol = ClassifyInput(input);
+        ParserInputSymbol input_symbol = jsoncpp::CharToInputSymbol(input);
         ParserStackSymbol stack_symbol = ParserStackSymbol::None;
         
         //get the top of the symbol stack, if needed
@@ -92,7 +93,9 @@ namespace jsoncpp
         //stack actions
         if (next_transition.stack_pop != next_transition.stack_push)
         {
-            this->state_machine_stack_.pop();
+            if (next_transition.stack_pop != ParserStackSymbol::None)
+                this->state_machine_stack_.pop();
+                
             if (next_transition.stack_push != ParserStackSymbol::None)
                 this->state_machine_stack_.push(next_transition.stack_push);
         }
@@ -122,16 +125,27 @@ namespace jsoncpp
 
     void JsonDeserializer::PushNewValue(JValueType type)
     {
-        unique_ptr<JValue> new_value(nullptr);
+        JValue* new_value;
 
-        if (type == JValueType::Array || type == JValueType::Object)
+        if (type == JValueType::Array || type == JValueType::Object || type == JValueType::Null)
         {
-            new_value.reset(new JValue(type));
+            new_value = new JValue(type);
         }
         else
         {
+            string accumulated_chars = this->scalar_value_.str();
 
+            if (type == JValueType::String)
+                new_value = new JValue(accumulated_chars);
+            else if (type == JValueType::Int)
+                new_value = new JValue(std::stoi(accumulated_chars));
+            else if (type == JValueType::Double)
+                new_value = new JValue(std::stod(accumulated_chars));
+            else if (type == JValueType::Boolean)
+                new_value = new JValue(accumulated_chars == "true");
         }
+
+        unique_ptr<JValue> new_value_ptr(new_value);
 
         //add the new value to the top of the stack
         this->value_stack_.emplace(this->property_name_.str(), std::move(new_value));
@@ -148,7 +162,7 @@ namespace jsoncpp
 
         if (this->value_stack_.size() > 0)
         {
-            auto& parent_pair = this->value_stack_.top();
+            auto& parent_pair = this->value_stack_.top();            
             auto& parent_value = parent_pair.second;
 
             if (parent_value->GetValueType() == JValueType::Array)
@@ -157,48 +171,8 @@ namespace jsoncpp
             }
             else if (parent_value->GetValueType() == JValueType::Object)
             {
-                parent_value->AddObjectChild(parent_pair.first, std::move(top_value.second));
+                parent_value->AddObjectChild(top_value.first, std::move(top_value.second));
             }
         }
-    }
-
-    constexpr ParserInputSymbol JsonDeserializer::ClassifyInput(char input)
-    {
-        switch (input)
-        {
-            case '\0': return ParserInputSymbol::None;  
-            case ' ':  
-            case '\r':  
-            case '\n':  
-            case '\t': 
-                return ParserInputSymbol::Whitespace;
-            case '{': return ParserInputSymbol::OpenBrace;
-            case '}': return ParserInputSymbol::CloseBrace;
-            case '[': return ParserInputSymbol::OpenBracket;
-            case ']': return ParserInputSymbol::CloseBracket;
-            case '"': return ParserInputSymbol::DoubleQuote;
-            case ',': return ParserInputSymbol::Comma;
-            case ':': return ParserInputSymbol::Colon;
-            case '\\': return ParserInputSymbol::Backslash;
-            case 'b': return ParserInputSymbol::AlphaB;
-            case 'f': return ParserInputSymbol::AlphaF;
-            case 'n': return ParserInputSymbol::AlphaN;
-            case 'r': return ParserInputSymbol::AlphaR;
-            case 't': return ParserInputSymbol::AlphaT;
-            case 'u': return ParserInputSymbol::AlphaU;
-            case '0': 
-            case '1': 
-            case '2': 
-            case '3': 
-            case '4': 
-            case '5': 
-            case '6': 
-            case '7': 
-            case '8': 
-            case '9': 
-                return ParserInputSymbol::Number;          
-            default:
-                return ParserInputSymbol::Other;
-        }
-    }
+    }    
 }

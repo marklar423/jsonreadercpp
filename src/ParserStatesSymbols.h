@@ -30,10 +30,14 @@ namespace jsoncpp
         Comma,
         Colon,
         Backslash,
+        AlphaA,
         AlphaB,
+        AlphaE,
         AlphaF,
+        AlphaL,
         AlphaN,
         AlphaR,
+        AlphaS,
         AlphaT,
         AlphaU,
         Number,
@@ -44,8 +48,8 @@ namespace jsoncpp
     {
         None,
         Start,
-        OpenBrace,
-        OpenBracket,
+        Object,
+        Array,
         Property
     };
 
@@ -63,5 +67,49 @@ namespace jsoncpp
         Pop,
         PushPop
     };
+
+    constexpr ParserInputSymbol CharToInputSymbol(char input)
+    {
+        switch (input)
+        {
+            case '\0': return ParserInputSymbol::None;  
+            case ' ':  
+            case '\r':  
+            case '\n':  
+            case '\t': 
+                return ParserInputSymbol::Whitespace;
+            case '{': return ParserInputSymbol::OpenBrace;
+            case '}': return ParserInputSymbol::CloseBrace;
+            case '[': return ParserInputSymbol::OpenBracket;
+            case ']': return ParserInputSymbol::CloseBracket;
+            case '"': return ParserInputSymbol::DoubleQuote;
+            case ',': return ParserInputSymbol::Comma;
+            case ':': return ParserInputSymbol::Colon;
+            case '\\': return ParserInputSymbol::Backslash;
+            case 'a': return ParserInputSymbol::AlphaA;
+            case 'b': return ParserInputSymbol::AlphaB;
+            case 'e': return ParserInputSymbol::AlphaE;        
+            case 'f': return ParserInputSymbol::AlphaF;
+            case 'l': return ParserInputSymbol::AlphaL;
+            case 'n': return ParserInputSymbol::AlphaN;
+            case 'r': return ParserInputSymbol::AlphaR;
+            case 's': return ParserInputSymbol::AlphaS;
+            case 't': return ParserInputSymbol::AlphaT;
+            case 'u': return ParserInputSymbol::AlphaU;            
+            case '0': 
+            case '1': 
+            case '2': 
+            case '3': 
+            case '4': 
+            case '5': 
+            case '6': 
+            case '7': 
+            case '8': 
+            case '9': 
+                return ParserInputSymbol::Number;          
+            default:
+                return ParserInputSymbol::Other;
+        }
+    }
 }
 #endif

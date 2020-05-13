@@ -12,7 +12,8 @@
 namespace jsoncpp 
 {
 
-    enum class JValueType {
+    enum class JValueType 
+    {
         String,
         Int,
         Double,
@@ -22,7 +23,8 @@ namespace jsoncpp
         Array
     };
 
-    class JValue {
+    class JValue 
+    {
         public:        
             //create an object, array, or null
             JValue(JValueType value_type) : JValue(value_type, {}) {}

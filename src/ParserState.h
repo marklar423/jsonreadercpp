@@ -2,7 +2,9 @@
 #define JSONCPP_PARSERSTATE_H
 
 #include <unordered_map>
+#include <initializer_list>
 
+#include "ParserStatesSymbols.h"
 #include "ParserStateTransition.h"
 #include "JValue.h"
 
@@ -14,6 +16,8 @@ namespace jsoncpp
             using TransitionLookup = std::unordered_map<ParserInputSymbol, std::unordered_map<ParserStackSymbol, ParserStateTransition>>;
 
             ParserState(ParserStateType type);
+            ParserState(ParserStateType type, std::initializer_list<ParserStateTransition> transitions);
+            ParserState(ParserStateType type, std::initializer_list<ParserStateTransition> transitions, ParserStateTransition else_transition);
 
             ParserStateType GetStateType() const { return state_type_; }
             
@@ -30,8 +34,6 @@ namespace jsoncpp
             //Also returns false in vice versa - transition input/stack isn't None
             //but this state has a transition that is None input/stack.
             bool AddTransition(const ParserStateTransition& transition);
-
-            virtual ~ParserState() = default;
 
         private:
             ParserStateType state_type_;

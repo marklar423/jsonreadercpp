@@ -25,6 +25,14 @@ namespace jsoncpp
 
         ParserStateTransition(ParserInputSymbol input, ParserStateType next_state, 
                                 ParserStackSymbol stack_pop, ParserStackSymbol stack_push,
+                                ParserCharDestination char_destination);
+                                
+        ParserStateTransition(ParserInputSymbol input, ParserStateType next_state, 
+                                ParserStackSymbol stack_pop, ParserStackSymbol stack_push,
+                                ParserValueAction value_action, JValueType value_push_type);
+
+        ParserStateTransition(ParserInputSymbol input, ParserStateType next_state, 
+                                ParserStackSymbol stack_pop, ParserStackSymbol stack_push,
                                 ParserCharDestination char_destination,
                                 ParserValueAction value_action,
                                 JValueType value_push_type);

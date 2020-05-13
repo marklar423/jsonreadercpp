@@ -33,9 +33,6 @@ namespace jsoncpp
             ParserStateType ProcessState(char input, const std::unique_ptr<ParserState>& state);
             void PushNewValue(JValueType type);
             void PopNewValue();
-            
-            constexpr static bool IsWhiteSpace(const char c) { return (c == ' ' || c == '\r' || c == '\r' || c == '\t'); }
-            constexpr static ParserInputSymbol ClassifyInput(char input);
     };
 }
 #endif
