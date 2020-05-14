@@ -18,7 +18,8 @@ namespace jsoncpp
     class JsonDeserializer 
     {
         public:
-            JsonDeserializer();
+            JsonDeserializer(bool debug_output);
+            JsonDeserializer() : JsonDeserializer(false) {}
 
             std::unique_ptr<JValue> ParseJsonString(std::istringstream& input);
 
@@ -29,8 +30,10 @@ namespace jsoncpp
             std::stringstream scalar_value_;
             std::stack<std::pair<std::string, std::unique_ptr<JValue>>> value_stack_;
             std::stack<ParserStackSymbol> state_machine_stack_;
+            bool debug_output_;
 
-            ParserStateType ProcessState(char input, const std::unique_ptr<ParserState>& state);
+            ParserStateType ProcessState(std::istringstream& input, const std::unique_ptr<ParserState>& state, bool *finished_input, char* processed_char);
+            const ParserStateTransition& GetNextTransition(std::istringstream& input, const std::unique_ptr<ParserState>& state, bool *finished_input, char* processed_char);
             void PushNewValue(JValueType type);
             void PopNewValue();
     };

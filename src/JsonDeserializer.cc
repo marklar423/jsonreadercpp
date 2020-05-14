@@ -10,50 +10,43 @@ using std::unique_ptr;
 
 namespace jsoncpp 
 {
-    JsonDeserializer::JsonDeserializer() 
+    JsonDeserializer::JsonDeserializer(bool debug_output)
         : states_(std::move(jsoncpp::CreateStatesMap())), 
-            property_name_(), scalar_value_(), value_stack_() 
-    {        
-    }
+            property_name_(), scalar_value_(), value_stack_(),
+            debug_output_(debug_output)
+    {
+        
+    } 
 
     unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istringstream& input) 
     {        
         auto state_type = ParserStateType::Start;
-        bool has_input = true;
-        char c;
+        bool finished_input = false;
         int char_num = 0;
+        char processed_char = '\0';
 
-        while (has_input) 
-        {
-            if (states_.find(state_type) == states_.end())
+        while (!finished_input) 
+        {   
+            if (debug_output_)
+                std::cout << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(state_type) << "\n";
+
+            if (state_type == ParserStateType::Error)
             {
-                std::cerr << "Unable to find state!\n";
+                std::cerr << "Error parsing! Position:" << char_num << "\n";
+                exit(1);
+            }
+            else if (states_.find(state_type) == states_.end())
+            {
+                std::cerr << "Unable to find state " << ParserStateTypeName(state_type) << "\n";
                 exit(1);
             }
             else
-            {                               
-                if (state_type == ParserStateType::Error)
-                {
-                    std::cerr << "Error parsing! Char " << char_num << "\n";
-                    exit(1);
-                }
-                else
-                {
-                    const auto& state = states_[state_type];
-                    c = '\0';
+            {        
+                const auto& state = states_[state_type];
+                processed_char = '\0';
+                state_type = ProcessState(input, state, &finished_input, &processed_char);
 
-                    if (!state->IsNoneInput())                    
-                    {
-                        //only read input if the state specifies
-                        if (!(input >> c)) has_input = false;
-                        else char_num++;
-                    }
-
-                    if (has_input)
-                    {
-                        state_type = ProcessState(c, state);
-                    }
-                }                
+                if (processed_char != '\0') char_num++;
             }
         }
 
@@ -62,7 +55,7 @@ namespace jsoncpp
         if (value_stack_.size() > 1)
         {
             std::cerr << "Error parsing! Unexpected end of input, JSON isn't complete\n";
-                exit(1);
+            exit(1);
         }
         else if (value_stack_.size() == 1)
         {
@@ -73,22 +66,11 @@ namespace jsoncpp
         return result;
     }
 
-    ParserStateType JsonDeserializer::ProcessState(char input, const unique_ptr<ParserState>& state)
-    {
-        ParserInputSymbol input_symbol = jsoncpp::CharToInputSymbol(input);
-        ParserStackSymbol stack_symbol = ParserStackSymbol::None;
-        
-        //get the top of the symbol stack, if needed
-        if (!state->IsNoneStackPop())
-        {
-            if (this->state_machine_stack_.size() == 0)
-                return ParserStateType::Error;
-            else
-                stack_symbol = this->state_machine_stack_.top();
-        }
-
+    ParserStateType JsonDeserializer::ProcessState(std::istringstream& input, const unique_ptr<ParserState>& state, 
+                                                        bool *finished_input, char* processed_char)    
+    {        
         //get next state
-        const auto& next_transition = state->GetTransition(input_symbol, stack_symbol);
+        const auto& next_transition = GetNextTransition(input, state, finished_input, processed_char);
 
         //stack actions
         if (next_transition.stack_pop != next_transition.stack_push)
@@ -101,12 +83,12 @@ namespace jsoncpp
         }
 
         //input actions
-        if (input_symbol != ParserInputSymbol::None && next_transition.char_destination != ParserCharDestination::None)
+        if ((*processed_char) != '\0' && next_transition.char_destination != ParserCharDestination::None)
         {
             if (next_transition.char_destination == ParserCharDestination::Name)
-                this->property_name_ << input;
+                this->property_name_ << (*processed_char);
             else if (next_transition.char_destination == ParserCharDestination::Value)
-                this->scalar_value_ << input;
+                this->scalar_value_ << (*processed_char);
         }
 
         //JValue actions
@@ -121,6 +103,51 @@ namespace jsoncpp
         }
 
         return next_transition.next_state;
+    }
+
+    const ParserStateTransition& JsonDeserializer::GetNextTransition(std::istringstream& input, const std::unique_ptr<ParserState>& state, 
+                                                                        bool *finished_input, char* processed_char)
+    {
+        //order of operations: None, None -> * | None, X -> * | X, None -> * | X, Y -> *
+        auto stack_symbol = (this->state_machine_stack_.size() > 0) ? 
+                                this->state_machine_stack_.top() : ParserStackSymbol::None;        
+
+        if (state->HasTransition(ParserInputSymbol::None, ParserStackSymbol::None))
+        {
+            //None, None -> *
+            return state->GetTransition(ParserInputSymbol::None, ParserStackSymbol::None);
+        }
+        else if (stack_symbol != ParserStackSymbol::None && state->HasTransition(ParserInputSymbol::None, stack_symbol))                            
+        {
+            //None, X -> *
+            return state->GetTransition(ParserInputSymbol::None, stack_symbol);
+        }
+        else
+        {
+            char c = '\0';
+            if (input >> std::noskipws >> c)
+            {              
+                *processed_char = c;
+                ParserInputSymbol input_symbol = jsoncpp::CharToInputSymbol(c);
+
+                //X, None -> *
+                if (state->HasTransition(input_symbol, ParserStackSymbol::None))
+                    return state->GetTransition(input_symbol, ParserStackSymbol::None);
+
+                //X, Y -> *
+                else if (state->HasTransition(input_symbol, stack_symbol))
+                    return state->GetTransition(input_symbol, stack_symbol);
+
+                else
+                    return state->GetElseTransition();                
+            }
+            else
+            {
+                //no more input to read
+                *finished_input = true;
+            }
+            
+        } 
     }
 
     void JsonDeserializer::PushNewValue(JValueType type)
@@ -157,11 +184,11 @@ namespace jsoncpp
 
     void JsonDeserializer::PopNewValue()
     {
-        pair<string, unique_ptr<JValue>> top_value(std::move(this->value_stack_.top()));
-        this->value_stack_.pop();
-
-        if (this->value_stack_.size() > 0)
+        if (this->value_stack_.size() > 1) //root value?
         {
+            pair<string, unique_ptr<JValue>> top_value(std::move(this->value_stack_.top()));
+            this->value_stack_.pop();
+
             auto& parent_pair = this->value_stack_.top();            
             auto& parent_value = parent_pair.second;
 

@@ -24,22 +24,23 @@ namespace jsoncpp
             const TransitionLookup&      GetTransitions()    const { return transitions_; };
             const ParserStateTransition& GetElseTransition() const { return else_transition_; };
 
-            const ParserStateTransition& GetTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const;
+            bool HasTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const;
 
-            bool IsNoneInput()    const { return is_none_input_; };
-            bool IsNoneStackPop() const { return is_none_stack_pop_; };
+            const ParserStateTransition& GetTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const
+            {
+                return transitions_.at(input_symbol).at(stack_symbol);
+            }
 
-            //returns false if transition is a None input or stack pop, 
-            //and other transitions exist that aren't a None input/stack.
-            //Also returns false in vice versa - transition input/stack isn't None
-            //but this state has a transition that is None input/stack.
-            bool AddTransition(const ParserStateTransition& transition);
+            const ParserStateTransition& GetTransitionOrElse(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const
+            {
+                return HasTransition(input_symbol, stack_symbol) ? 
+                            GetTransition(input_symbol, stack_symbol) : else_transition_;
+            }
+
+            void AddTransition(const ParserStateTransition& transition) { transitions_[transition.input].emplace(transition.stack_pop, transition); }
 
         private:
             ParserStateType state_type_;
-            bool is_none_input_;
-            bool is_none_stack_pop_;
-            bool CanAddTransition(ParserInputSymbol input, ParserStackSymbol stack_pop);
 
         protected:
             TransitionLookup transitions_;

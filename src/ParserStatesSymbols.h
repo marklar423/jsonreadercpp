@@ -1,6 +1,8 @@
 #ifndef JSONCPP_PARSERSTATESSYMBOLS_H_
 #define JSONCPP_PARSERSTATESSYMBOLS_H_
 
+#include <string>
+
 namespace jsoncpp 
 {
     enum class ParserStateType 
@@ -110,6 +112,26 @@ namespace jsoncpp
             default:
                 return ParserInputSymbol::Other;
         }
+    }
+
+    static std::string ParserStateTypeName(ParserStateType state_type)
+    {
+        switch (state_type)
+        {
+            case ParserStateType::Error: return "Error";
+            case ParserStateType::Start: return "Start";
+            case ParserStateType::Finish: return "Finish";
+            case ParserStateType::RootObject: return "RootObject";
+            case ParserStateType::Object: return "Object";
+            case ParserStateType::PostObject: return "PostObject";
+            case ParserStateType::PostProperty: return "PostProperty";
+            case ParserStateType::String: return "String";
+            case ParserStateType::EscapeChar: return "EscapeChar";
+            case ParserStateType::Value: return "Value";
+            case ParserStateType::PostValue: return "PostValue";            
+        }
+
+        return "[N/A]";
     }
 }
 #endif

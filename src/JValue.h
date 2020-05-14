@@ -49,7 +49,7 @@ namespace jsoncpp
 
             std::string GetName() const { return name_; }            
             JValueType  GetValueType() const { return value_type_; }             
-            size_t      GetSize() const { return children_.size(); }
+            size_t      GetNumberOfChildren() const { return children_.size(); }
             const auto& GetChildren() const { return children_; }
             bool        HasProperty(std::string name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
             
