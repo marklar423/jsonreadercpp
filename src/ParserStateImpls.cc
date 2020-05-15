@@ -19,6 +19,8 @@ namespace jsoncpp
     unique_ptr<ParserState> CreateRootObjectState();
     unique_ptr<ParserState> CreateObjectState();
     unique_ptr<ParserState> CreatePostObjectState();
+    unique_ptr<ParserState> CreatePostPropertyState();
+    unique_ptr<ParserState> CreatePostValueState();
 
     unordered_map<ParserStateType, unique_ptr<ParserState>> CreateStatesMap()
     {
@@ -27,7 +29,9 @@ namespace jsoncpp
             CreateFinishState(),
             CreateRootObjectState(),
             CreateObjectState(),
-            CreatePostObjectState()
+            CreatePostObjectState(),
+            CreatePostPropertyState(),
+            CreatePostValueState()
         };
 
         unordered_map<ParserStateType, unique_ptr<ParserState>> states_map;
@@ -66,6 +70,7 @@ namespace jsoncpp
         return unique_ptr<ParserState>(new ParserState(ParserStateType::RootObject, 
                                         {
                                             { ParserInputSymbol::Whitespace, ParserStateType::RootObject },
+
                                             { ParserInputSymbol::OpenBrace, ParserStateType::Object,
                                                 ParserStackSymbol::None, ParserStackSymbol::Object,
                                                 ParserValueAction::Push, JValueType::Object }
@@ -78,9 +83,11 @@ namespace jsoncpp
         return unique_ptr<ParserState>(new ParserState(ParserStateType::Object, 
                                         {
                                             { ParserInputSymbol::Whitespace, ParserStateType::Object },
+
                                             { ParserInputSymbol::CloseBrace, ParserStateType::PostObject,
                                                 ParserStackSymbol::Object, ParserStackSymbol::None,
                                                 ParserValueAction::Pop, JValueType::Null },
+                                                
                                             { ParserInputSymbol::DoubleQuote, ParserStateType::String,
                                                 ParserStackSymbol::None, ParserStackSymbol::Property }
                                         },
@@ -93,10 +100,50 @@ namespace jsoncpp
                                         {
                                             { ParserInputSymbol::None, ParserStateType::Finish,
                                                 ParserStackSymbol::Start, ParserStackSymbol::None },
+
                                             { ParserInputSymbol::None, ParserStateType::PostValue,
                                                 ParserStackSymbol::Object, ParserStackSymbol::Object },
+
                                             { ParserInputSymbol::None, ParserStateType::PostValue,
                                                 ParserStackSymbol::Array, ParserStackSymbol::Array }
                                         }));
+    }
+
+    unique_ptr<ParserState> CreatePostPropertyState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostProperty, 
+                                        {
+                                            { ParserInputSymbol::Whitespace, ParserStateType::PostProperty },     
+                                                
+                                            { ParserInputSymbol::Colon, ParserStateType::Value,
+                                                ParserStackSymbol::Property, ParserStackSymbol::None },
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+
+    
+    unique_ptr<ParserState> CreatePostValueState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostValue, 
+                                        {
+                                            { ParserInputSymbol::Whitespace, ParserStateType::PostValue },     
+                                                
+                                            { ParserInputSymbol::Comma, ParserStateType::Value,
+                                                ParserStackSymbol::Array, ParserStackSymbol::Array },
+                                                
+                                            { ParserInputSymbol::Comma, ParserStateType::Object,
+                                                ParserStackSymbol::Object, ParserStackSymbol::Object },
+
+                                            { ParserInputSymbol::CloseBracket, ParserStateType::PostValue,
+                                                ParserStackSymbol::Array, ParserStackSymbol::None,
+                                                ParserCharDestination::None,
+                                                ParserValueAction::Pop, JValueType::Null },
+
+                                            { ParserInputSymbol::CloseBrace, ParserStateType::PostObject,
+                                                ParserStackSymbol::Object, ParserStackSymbol::None,
+                                                ParserCharDestination::None,
+                                                ParserValueAction::Pop, JValueType::Null }
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
     }
 }
