@@ -19,7 +19,10 @@ namespace jsoncpp
     unique_ptr<ParserState> CreateRootObjectState();
     unique_ptr<ParserState> CreateObjectState();
     unique_ptr<ParserState> CreatePostObjectState();
+    unique_ptr<ParserState> CreateValueStringState();
+    unique_ptr<ParserState> CreatePropertyStringState();
     unique_ptr<ParserState> CreatePostPropertyState();
+    unique_ptr<ParserState> CreateValueState();
     unique_ptr<ParserState> CreatePostValueState();
 
     unordered_map<ParserStateType, unique_ptr<ParserState>> CreateStatesMap()
@@ -30,7 +33,10 @@ namespace jsoncpp
             CreateRootObjectState(),
             CreateObjectState(),
             CreatePostObjectState(),
+            CreateValueStringState(),
+            CreatePropertyStringState(),
             CreatePostPropertyState(),
+            CreateValueState(),
             CreatePostValueState()
         };
 
@@ -88,8 +94,7 @@ namespace jsoncpp
                                                 ParserStackSymbol::Object, ParserStackSymbol::None,
                                                 ParserValueAction::Pop, JValueType::Null },
                                                 
-                                            { ParserInputSymbol::DoubleQuote, ParserStateType::String,
-                                                ParserStackSymbol::None, ParserStackSymbol::Property }
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::PropertyString }
                                         },
                                         { ParserInputSymbol::None, ParserStateType::Error } ));
     }
@@ -108,19 +113,66 @@ namespace jsoncpp
                                                 ParserStackSymbol::Array, ParserStackSymbol::Array }
                                         }));
     }
+    
+    unique_ptr<ParserState> CreateValueStringState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::ValueString, 
+                                        {
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::PostValue,
+                                                ParserStackSymbol::None, ParserStackSymbol::None,
+                                                ParserValueAction::PushPop, JValueType::String },
+                                                
+                                            { ParserInputSymbol::Backslash, ParserStateType::EscapeChar }, 
+                                        },
+                                         { ParserInputSymbol::None, ParserStateType::ValueString,
+                                                ParserStackSymbol::None, ParserStackSymbol::None,
+                                                ParserCharDestination::Value }));
+    }
+    
+    unique_ptr<ParserState> CreatePropertyStringState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::PropertyString, 
+                                        {
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::PostProperty },
+                                                
+                                            { ParserInputSymbol::Backslash, ParserStateType::EscapeChar }, 
+                                        },
+                                        { ParserInputSymbol::None, ParserStateType::PropertyString,
+                                                ParserStackSymbol::None, ParserStackSymbol::None,
+                                                ParserCharDestination::Name }));
+    }
 
     unique_ptr<ParserState> CreatePostPropertyState()
     {
         return unique_ptr<ParserState>(new ParserState(ParserStateType::PostProperty, 
                                         {
-                                            { ParserInputSymbol::Whitespace, ParserStateType::PostProperty },     
-                                                
-                                            { ParserInputSymbol::Colon, ParserStateType::Value,
-                                                ParserStackSymbol::Property, ParserStackSymbol::None },
+                                            { ParserInputSymbol::Whitespace, ParserStateType::PostProperty },    
+                                            { ParserInputSymbol::Colon, ParserStateType::Value },
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));
     }
 
+    unique_ptr<ParserState> CreateValueState()
+    {
+         return unique_ptr<ParserState>(new ParserState(ParserStateType::Value, 
+                                        {                                            
+                                            { ParserInputSymbol::Whitespace, ParserStateType::Value },                                            
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },                                            
+                                            { ParserInputSymbol::AlphaF, ParserStateType::False },                                            
+                                            { ParserInputSymbol::AlphaT, ParserStateType::True },                                            
+                                            { ParserInputSymbol::AlphaN, ParserStateType::Null },                                            
+                                            { ParserInputSymbol::Number, ParserStateType::Int },
+
+                                            { ParserInputSymbol::OpenBracket, ParserStateType::Array,
+                                                ParserStackSymbol::None, ParserStackSymbol::Array,
+                                                ParserValueAction::Push, JValueType::Array },
+
+                                            { ParserInputSymbol::OpenBrace, ParserStateType::Object,
+                                                ParserStackSymbol::None, ParserStackSymbol::Object,
+                                                ParserValueAction::Push, JValueType::Object }
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
     
     unique_ptr<ParserState> CreatePostValueState()
     {

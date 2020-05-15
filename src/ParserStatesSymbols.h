@@ -14,10 +14,16 @@ namespace jsoncpp
         Object,
         PostObject,
         PostProperty,
-        String,
+        ValueString,
+        PropertyString,
         EscapeChar,
         Value,
-        PostValue
+        PostValue,
+        True,
+        False,
+        Int,
+        Null,
+        Array
     };
 
     enum class ParserInputSymbol
@@ -51,8 +57,7 @@ namespace jsoncpp
         None,
         Start,
         Object,
-        Array,
-        Property
+        Array
     };
 
     enum class ParserCharDestination
@@ -125,10 +130,16 @@ namespace jsoncpp
             case ParserStateType::Object: return "Object";
             case ParserStateType::PostObject: return "PostObject";
             case ParserStateType::PostProperty: return "PostProperty";
-            case ParserStateType::String: return "String";
+            case ParserStateType::PropertyString: return "PropertyString";
+            case ParserStateType::ValueString: return "ValueString";
             case ParserStateType::EscapeChar: return "EscapeChar";
             case ParserStateType::Value: return "Value";
             case ParserStateType::PostValue: return "PostValue";            
+            case ParserStateType::True: return "True"; 
+            case ParserStateType::False: return "False"; 
+            case ParserStateType::Int: return "Int"; 
+            case ParserStateType::Null: return "Null"; 
+            case ParserStateType::Array: return "Array"; 
         }
 
         return "[N/A]";
