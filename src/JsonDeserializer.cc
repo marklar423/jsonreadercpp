@@ -180,7 +180,7 @@ namespace jsoncpp
         unique_ptr<JValue> new_value_ptr(new_value);
 
         //add the new value to the top of the stack
-        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value));
+        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value_ptr));
         
         //clear the accumulated values
         this->property_name_.str("");
