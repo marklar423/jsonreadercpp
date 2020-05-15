@@ -72,34 +72,37 @@ namespace jsoncpp
         //get next state
         const auto& next_transition = GetNextTransition(input, state, finished_input, processed_char);
 
-        //stack actions
-        if (next_transition.stack_pop != next_transition.stack_push)
+        if (!(*finished_input))
         {
-            if (next_transition.stack_pop != ParserStackSymbol::None)
-                this->state_machine_stack_.pop();
-                
-            if (next_transition.stack_push != ParserStackSymbol::None)
-                this->state_machine_stack_.push(next_transition.stack_push);
-        }
+            //stack actions
+            if (next_transition.stack_pop != next_transition.stack_push)
+            {
+                if (next_transition.stack_pop != ParserStackSymbol::None)
+                    this->state_machine_stack_.pop();
+                    
+                if (next_transition.stack_push != ParserStackSymbol::None)
+                    this->state_machine_stack_.push(next_transition.stack_push);
+            }
 
-        //input actions
-        if ((*processed_char) != '\0' && next_transition.char_destination != ParserCharDestination::None)
-        {
-            if (next_transition.char_destination == ParserCharDestination::Name)
-                this->property_name_ << (*processed_char);
-            else if (next_transition.char_destination == ParserCharDestination::Value)
-                this->scalar_value_ << (*processed_char);
-        }
+            //input actions
+            if ((*processed_char) != '\0' && next_transition.char_destination != ParserCharDestination::None)
+            {
+                if (next_transition.char_destination == ParserCharDestination::Name)
+                    this->property_name_ << (*processed_char);
+                else if (next_transition.char_destination == ParserCharDestination::Value)
+                    this->scalar_value_ << (*processed_char);
+            }
 
-        //JValue actions
-        if (next_transition.value_action == ParserValueAction::Push || next_transition.value_action == ParserValueAction::PushPop)
-        {
-            PushNewValue(next_transition.value_push_type.value());
-        }
+            //JValue actions
+            if (next_transition.value_action == ParserValueAction::Push || next_transition.value_action == ParserValueAction::PushPop)
+            {
+                PushNewValue(next_transition.value_push_type.value());
+            }
 
-        if (next_transition.value_action == ParserValueAction::Pop || next_transition.value_action == ParserValueAction::PushPop)
-        {
-            PopNewValue();
+            if (next_transition.value_action == ParserValueAction::Pop || next_transition.value_action == ParserValueAction::PushPop)
+            {
+                PopNewValue();
+            }
         }
 
         return next_transition.next_state;
@@ -145,8 +148,10 @@ namespace jsoncpp
             {
                 //no more input to read
                 *finished_input = true;
-            }
-            
+
+                //there should be no more states, but we need to return something, sooo
+                return state->GetElseTransition();                
+            }            
         } 
     }
 
