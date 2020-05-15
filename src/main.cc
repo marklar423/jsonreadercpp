@@ -35,8 +35,6 @@ int main(int argc, char *argv[])
 void PrintJsonTree(const JValue& root, string prefix) 
 {
 	int i = 0;
-	if (prefix.length() > 0)
-		prefix += " / ";
 
 	if (root.GetNumberOfChildren() > 0)
 	{
@@ -57,7 +55,7 @@ void PrintJsonTree(const JValue& root, string prefix)
 				cout << value->GetStringValue().value_or("") << "\n";
 			
 			if (value->GetNumberOfChildren() > 0)
-				PrintJsonTree(*value, value->GetName());
+				PrintJsonTree(*value, prefix + "[" + name + "]" );
 
 			i++;
 		}
