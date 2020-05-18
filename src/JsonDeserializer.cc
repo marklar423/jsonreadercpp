@@ -12,8 +12,7 @@ namespace jsoncpp
 {
     JsonDeserializer::JsonDeserializer(bool debug_output)
         : states_(std::move(jsoncpp::CreateStatesMap())), 
-            property_name_(), scalar_value_(), value_stack_(),
-            debug_output_(debug_output)
+            value_stack_(),  machine_stack_(), debug_output_(debug_output)
     {
         
     } 
@@ -52,15 +51,14 @@ namespace jsoncpp
 
         unique_ptr<JValue> result(nullptr);
 
-        if (value_stack_.size() > 1)
+        if (value_stack_.GetSize() > 1)
         {
             std::cerr << "Error parsing! Unexpected end of input, JSON isn't complete\n";
             exit(1);
         }
-        else if (value_stack_.size() == 1)
+        else
         {
-            result = std::move(value_stack_.top().second);
-            value_stack_.pop(); //not really needed but a good habit
+            result = value_stack_.RemoveRootValue();
         }
 
         return result;
@@ -75,33 +73,20 @@ namespace jsoncpp
         if (!(*finished_input))
         {
             //stack actions
-            if (next_transition.stack_pop != next_transition.stack_push)
-            {
-                if (next_transition.stack_pop != ParserStackSymbol::None)
-                    this->state_machine_stack_.pop();
-                    
-                if (next_transition.stack_push != ParserStackSymbol::None)
-                    this->state_machine_stack_.push(next_transition.stack_push);
-            }
+            machine_stack_.PopPush(next_transition.stack_pop, next_transition.stack_push);
 
             //input actions
-            if ((*processed_char) != '\0' && next_transition.char_destination != ParserCharDestination::None)
-            {
-                if (next_transition.char_destination == ParserCharDestination::Name)
-                    this->property_name_ << (*processed_char);
-                else if (next_transition.char_destination == ParserCharDestination::Value)
-                    this->scalar_value_ << (*processed_char);
-            }
+            value_stack_.AccumulateInput(*processed_char, next_transition.char_destination);
 
             //JValue actions
             if (next_transition.value_action == ParserValueAction::Push || next_transition.value_action == ParserValueAction::PushPop)
             {
-                PushNewValue(next_transition.value_push_type.value());
+                value_stack_.PushNewValue(next_transition.value_push_type.value());
             }
 
             if (next_transition.value_action == ParserValueAction::Pop || next_transition.value_action == ParserValueAction::PushPop)
             {
-                PopNewValue();
+                value_stack_.PopNewValue();
             }
         }
 
@@ -112,8 +97,8 @@ namespace jsoncpp
                                                                         bool *finished_input, char* processed_char)
     {
         //order of operations: None, None -> * | None, X -> * | X, None -> * | X, Y -> *
-        auto stack_symbol = (this->state_machine_stack_.size() > 0) ? 
-                                this->state_machine_stack_.top() : ParserStackSymbol::None;        
+        auto stack_symbol = (this->machine_stack_.GetSize() > 0) ? 
+                                this->machine_stack_.GetTop() : ParserStackSymbol::None;        
 
         if (state->HasTransition(ParserInputSymbol::None, ParserStackSymbol::None))
         {
@@ -153,58 +138,5 @@ namespace jsoncpp
                 return state->GetElseTransition();                
             }            
         } 
-    }
-
-    void JsonDeserializer::PushNewValue(JValueType type)
-    {
-        JValue* new_value;
-
-        if (type == JValueType::Array || type == JValueType::Object || type == JValueType::Null)
-        {
-            new_value = new JValue(type);
-        }
-        else
-        {
-            string accumulated_chars = this->scalar_value_.str();
-
-            if (type == JValueType::String)
-                new_value = new JValue(accumulated_chars);
-            else if (type == JValueType::Int)
-                new_value = new JValue(std::stoi(accumulated_chars));
-            else if (type == JValueType::Double)
-                new_value = new JValue(std::stod(accumulated_chars));
-            else if (type == JValueType::Boolean)
-                new_value = new JValue(accumulated_chars == "true");
-        }
-
-        unique_ptr<JValue> new_value_ptr(new_value);
-
-        //add the new value to the top of the stack
-        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value_ptr));
-        
-        //clear the accumulated values
-        this->property_name_.str("");
-        this->scalar_value_.str("");
-    }
-
-    void JsonDeserializer::PopNewValue()
-    {
-        if (this->value_stack_.size() > 1) //root value?
-        {
-            pair<string, unique_ptr<JValue>> top_value(std::move(this->value_stack_.top()));
-            this->value_stack_.pop();
-
-            auto& parent_pair = this->value_stack_.top();            
-            auto& parent_value = parent_pair.second;
-
-            if (parent_value->GetValueType() == JValueType::Array)
-            {
-                parent_value->AddArrayChild(std::move(top_value.second));
-            }
-            else if (parent_value->GetValueType() == JValueType::Object)
-            {
-                parent_value->AddObjectChild(top_value.first, std::move(top_value.second));
-            }
-        }
     }    
 }
