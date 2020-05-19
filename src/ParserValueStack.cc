@@ -8,7 +8,7 @@ namespace jsoncpp
 {
     void ParserValueStack::AccumulateInput(char input_char, ParserCharDestination destination)
     {
-        if (input_char != '\0' && destination != ParserCharDestination::None)
+        if (input_char != '\0')
         {
             if (destination == ParserCharDestination::Name)
                 this->property_name_ << input_char;

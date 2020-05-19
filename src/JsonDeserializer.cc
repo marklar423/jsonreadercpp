@@ -19,7 +19,7 @@ namespace jsoncpp
 
     unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istringstream& input) 
     {        
-        auto state_type = ParserStateType::Start;
+        auto current_state_type = ParserStateType::Start;
         bool finished_input = false;
         int char_num = 0;
         char processed_char = '\0';
@@ -27,23 +27,25 @@ namespace jsoncpp
         while (!finished_input) 
         {   
             if (debug_output_)
-                std::cout << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(state_type) << "\n";
+                std::cout << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(current_state_type) << "\n";
 
-            if (state_type == ParserStateType::Error)
+            const auto& current_state_iter = states_.find(current_state_type);
+
+            if (current_state_type == ParserStateType::Error)
             {
                 std::cerr << "Error parsing! Position:" << char_num << "\n";
                 exit(1);
             }
-            else if (states_.find(state_type) == states_.end())
+            else if (current_state_iter == states_.end())
             {
-                std::cerr << "Unable to find state " << ParserStateTypeName(state_type) << "\n";
+                std::cerr << "Unable to find state " << ParserStateTypeName(current_state_type) << "\n";
                 exit(1);
             }
             else
             {        
-                const auto& state = states_[state_type];
+                const auto& current_state_ptr = current_state_iter->second;
                 processed_char = '\0';
-                state_type = ProcessState(input, state, &finished_input, &processed_char);
+                current_state_type = ProcessState(input, current_state_ptr, &finished_input, &processed_char);
 
                 if (processed_char != '\0') char_num++;
             }
