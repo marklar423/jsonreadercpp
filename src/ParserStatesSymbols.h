@@ -20,9 +20,16 @@ namespace jsoncpp
         Value,
         PostValue,
         True,
+        True2,
+        True3,
         False,
+        False2,
+        False3,
+        False4,
         Int,
         Null,
+        Null2,
+        Null3,
         Array
     };
 
@@ -134,11 +141,18 @@ namespace jsoncpp
             case ParserStateType::ValueString: return "ValueString";
             case ParserStateType::EscapeChar: return "EscapeChar";
             case ParserStateType::Value: return "Value";
-            case ParserStateType::PostValue: return "PostValue";            
-            case ParserStateType::True: return "True"; 
+            case ParserStateType::PostValue: return "PostValue";       
+            case ParserStateType::Int: return "Int";      
+            case ParserStateType::True: return "True";       
+            case ParserStateType::True2: return "True2";       
+            case ParserStateType::True3: return "True3"; 
             case ParserStateType::False: return "False"; 
-            case ParserStateType::Int: return "Int"; 
+            case ParserStateType::False2: return "False2"; 
+            case ParserStateType::False3: return "False3"; 
+            case ParserStateType::False4: return "False4"; 
             case ParserStateType::Null: return "Null"; 
+            case ParserStateType::Null2: return "Null2"; 
+            case ParserStateType::Null3: return "Null3"; 
             case ParserStateType::Array: return "Array"; 
         }
 

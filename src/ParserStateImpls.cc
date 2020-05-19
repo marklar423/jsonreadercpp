@@ -24,6 +24,16 @@ namespace jsoncpp
     unique_ptr<ParserState> CreatePostPropertyState();
     unique_ptr<ParserState> CreateValueState();
     unique_ptr<ParserState> CreatePostValueState();
+    unique_ptr<ParserState> CreateTrueState();
+    unique_ptr<ParserState> CreateTrue2State();
+    unique_ptr<ParserState> CreateTrue3State();
+    unique_ptr<ParserState> CreateFalseState();
+    unique_ptr<ParserState> CreateFalse2State();
+    unique_ptr<ParserState> CreateFalse3State();
+    unique_ptr<ParserState> CreateFalse4State();
+    unique_ptr<ParserState> CreateNullState();
+    unique_ptr<ParserState> CreateNull2State();
+    unique_ptr<ParserState> CreateNull3State();
 
     unordered_map<ParserStateType, unique_ptr<ParserState>> CreateStatesMap()
     {
@@ -37,7 +47,17 @@ namespace jsoncpp
             CreatePropertyStringState(),
             CreatePostPropertyState(),
             CreateValueState(),
-            CreatePostValueState()
+            CreatePostValueState(),
+            CreateTrueState(),
+            CreateTrue2State(),
+            CreateTrue3State(),
+            CreateFalseState(),
+            CreateFalse2State(),
+            CreateFalse3State(),
+            CreateFalse4State(),
+            CreateNullState(),
+            CreateNull2State(),
+            CreateNull3State()
         };
 
         unordered_map<ParserStateType, unique_ptr<ParserState>> states_map;
@@ -153,12 +173,18 @@ namespace jsoncpp
          return unique_ptr<ParserState>(new ParserState(ParserStateType::Value, 
                                         {                                            
                                             { ParserInputSymbol::Whitespace, ParserStateType::Value },                                            
-                                            { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },                                            
-                                            { ParserInputSymbol::AlphaF, ParserStateType::False },                                            
-                                            { ParserInputSymbol::AlphaT, ParserStateType::True },                                            
-                                            { ParserInputSymbol::AlphaN, ParserStateType::Null },                                            
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },                                
                                             { ParserInputSymbol::Number, ParserStateType::Int },
+                                            
+                                            ParserStateTransition( ParserInputSymbol::AlphaF, ParserStateType::False )                                           
+                                                .SetCharDestination(ParserCharDestination::Value),
 
+                                            ParserStateTransition( ParserInputSymbol::AlphaT, ParserStateType::True )
+                                                .SetCharDestination(ParserCharDestination::Value),
+
+                                            ParserStateTransition( ParserInputSymbol::AlphaN, ParserStateType::Null )
+                                                .SetCharDestination(ParserCharDestination::Value),            
+                                            
                                             ParserStateTransition(ParserInputSymbol::OpenBracket, ParserStateType::Array)
                                                 .SetStack(ParserStackSymbol::None, ParserStackSymbol::Array)
                                                 .SetValueAction(ParserValueAction::Push, JValueType::Array),
@@ -192,4 +218,85 @@ namespace jsoncpp
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));
     }
+
+    unique_ptr<ParserState> CreateTrueState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::True, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaR, ParserStateType::True2)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateTrue2State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::True2, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::True3)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateTrue3State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::True3, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaE, ParserStateType::PostValue)
+                                            .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateFalseState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::False, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaA, ParserStateType::False2)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateFalse2State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::False2, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::False3)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateFalse3State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::False3, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaS, ParserStateType::False4)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateFalse4State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::False4, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaE, ParserStateType::PostValue)
+                                            .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateNullState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::Null, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::Null2)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateNull2State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::Null2, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::Null3)
+                                            .SetCharDestination(ParserCharDestination::Value) 
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreateNull3State()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::Null3, 
+                                        { ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::PostValue)
+                                            .SetValueAction(ParserValueAction::PushPop, JValueType::Null)
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
 }

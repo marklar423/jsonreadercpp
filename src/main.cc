@@ -51,6 +51,8 @@ void PrintJsonTree(const JValue& root, string prefix)
 				cout << "{\n";
 			else if (value->GetValueType() == JValueType::Array)
 				cout << "[\n";
+			else if (value->GetValueType() == JValueType::Null)
+				cout << "[null]\n";
 			else
 				cout << value->GetStringValue().value_or("") << "\n";
 			
