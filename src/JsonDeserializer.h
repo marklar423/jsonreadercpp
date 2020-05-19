@@ -11,6 +11,7 @@
 #include "ParserStatesSymbols.h"
 #include "ParserValueStack.h"
 #include "ParserMachineStack.h"
+#include "ParserStatesManager.h"
 
 namespace jsoncpp 
 {
@@ -23,15 +24,13 @@ namespace jsoncpp
 
             std::unique_ptr<JValue> ParseJsonString(std::istringstream& input);
 
-
         private:
-            std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> states_;
-            bool debug_output_;
+            bool debug_output_;            
+            ParserStatesManager states_manager_;
             ParserValueStack value_stack_;
             ParserMachineStack machine_stack_;
 
-            ParserStateType ProcessState(std::istringstream& input, const std::unique_ptr<ParserState>& state, bool *finished_input, char* processed_char);
-            const ParserStateTransition& GetNextTransition(std::istringstream& input, const std::unique_ptr<ParserState>& state, bool *finished_input, char* processed_char);
+            ParserStatesManager::NextTransition ProcessState(std::istringstream& input, ParserStateType current_state_type);
             
     };
 }
