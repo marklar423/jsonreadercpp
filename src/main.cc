@@ -13,15 +13,8 @@ void PrintJsonTree(const JValue& root, string prefix);
 
 int main(int argc, char *argv[])
 {
-	string input_file = "";	
-	std::getline(cin, input_file);
-	
-	cout << input_file << "\n";
-
-	istringstream input_stream(input_file);
-
 	JsonDeserializer parser(true);
-	auto parsed_json = parser.ParseJsonString(input_stream);
+	auto parsed_json = parser.ParseJsonString(cin);
 
 	if (parsed_json.get() != nullptr)
 		PrintJsonTree(*parsed_json, "");

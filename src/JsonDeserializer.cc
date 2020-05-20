@@ -16,7 +16,7 @@ namespace jsoncpp
         
     } 
 
-    unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istringstream& input) 
+    unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istream& input) 
     {        
         auto current_state_type = ParserStateType::Start;
         bool finished_input = false;
@@ -62,7 +62,7 @@ namespace jsoncpp
         return result;
     }
 
-    ParserStatesManager::NextTransition JsonDeserializer::ProcessState(std::istringstream& input, ParserStateType current_state_type)    
+    ParserStatesManager::NextTransition JsonDeserializer::ProcessState(std::istream& input, ParserStateType current_state_type)    
     {        
         //get next state
         auto stack_symbol = (this->machine_stack_.GetSize() > 0) ? 

@@ -29,7 +29,7 @@ namespace jsoncpp
 
             ParserStatesManager() : states_(jsoncpp::CreateStatesMap()) {}
 
-            NextTransition GetNextTransition(ParserStateType current_state_type, std::istringstream& input, ParserStackSymbol stack_top);
+            NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top);
 
         private:
             std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> states_;

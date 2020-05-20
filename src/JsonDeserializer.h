@@ -22,7 +22,7 @@ namespace jsoncpp
             JsonDeserializer(bool debug_output);
             JsonDeserializer() : JsonDeserializer(false) {}
 
-            std::unique_ptr<JValue> ParseJsonString(std::istringstream& input);
+            std::unique_ptr<JValue> ParseJsonString(std::istream& input);
 
         private:
             bool debug_output_;            
@@ -30,7 +30,7 @@ namespace jsoncpp
             ParserValueStack value_stack_;
             ParserMachineStack machine_stack_;
 
-            ParserStatesManager::NextTransition ProcessState(std::istringstream& input, ParserStateType current_state_type);
+            ParserStatesManager::NextTransition ProcessState(std::istream& input, ParserStateType current_state_type);
             
     };
 }
