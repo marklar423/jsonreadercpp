@@ -40,24 +40,26 @@ void PrintJsonTree(const JValue& root, string prefix)
 	{
 		for (auto& value : root) 
 		{
-			const string& name = value->GetName();
+			string name(value->GetName());
 
-			if (name.length() > 0)
-				cout << prefix << "[\"" << name << "\"]: ";
-			else		
-				cout << prefix << "[" << i << "]: ";
+			if (name.length() == 0)
+				name = std::to_string(i);
 			
+			cout << prefix << "[" << name << "]: ";
+
 			if (value->GetValueType() == JValueType::Object)
-				cout << "{\n";
+				cout << "[object[" << value->GetNumberOfChildren() << "]]\n";
 			else if (value->GetValueType() == JValueType::Array)
-				cout << "[\n";
+				cout << "[array[" << value->GetNumberOfChildren() << "]]\n";
 			else if (value->GetValueType() == JValueType::Null)
 				cout << "[null]\n";
 			else
 				cout << value->GetStringValue().value_or("") << "\n";
 			
 			if (value->GetNumberOfChildren() > 0)
-				PrintJsonTree(*value, prefix + "[" + name + "]" );
+			{
+				PrintJsonTree(*value, prefix + "[" + name + "]");
+			}
 
 			i++;
 		}

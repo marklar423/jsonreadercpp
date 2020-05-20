@@ -29,8 +29,7 @@ namespace jsoncpp
         Int,
         Null,
         Null2,
-        Null3,
-        Array
+        Null3
     };
 
     enum class ParserInputSymbol
@@ -153,7 +152,6 @@ namespace jsoncpp
             case ParserStateType::Null: return "Null"; 
             case ParserStateType::Null2: return "Null2"; 
             case ParserStateType::Null3: return "Null3"; 
-            case ParserStateType::Array: return "Array"; 
         }
 
         return "[N/A]";
