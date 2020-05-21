@@ -19,8 +19,7 @@ namespace jsoncpp
     class JsonDeserializer 
     {
         public:
-            JsonDeserializer(bool debug_output);
-            JsonDeserializer() : JsonDeserializer(false) {}
+            JsonDeserializer(bool debug_output = false);
 
             std::unique_ptr<JValue> ParseJsonString(std::istream& input);
 

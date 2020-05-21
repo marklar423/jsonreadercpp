@@ -15,9 +15,9 @@ namespace jsoncpp
         public:
             using TransitionLookup = std::unordered_map<ParserInputSymbol, std::unordered_map<ParserStackSymbol, ParserStateTransition>>;
 
-            ParserState(ParserStateType type);
-            ParserState(ParserStateType type, std::initializer_list<ParserStateTransition> transitions);
-            ParserState(ParserStateType type, std::initializer_list<ParserStateTransition> transitions, ParserStateTransition else_transition);
+            ParserState(ParserStateType type, 
+                        std::initializer_list<ParserStateTransition> transitions = {},
+                        ParserStateTransition else_transition = {ParserInputSymbol::None, ParserStateType::Error});
 
             ParserStateType GetStateType() const { return state_type_; }
             

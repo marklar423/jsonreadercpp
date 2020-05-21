@@ -20,11 +20,8 @@ namespace jsoncpp
                 bool finished_input;
                 char processed_char;
 
-                NextTransition(const ParserStateTransition& transition, bool finished_input, char processed_char)
-                    :transition(transition), finished_input(finished_input), processed_char(processed_char) {}
-
-                NextTransition(const ParserStateTransition& transition)
-                    : NextTransition(transition, false, '\0') {}
+                NextTransition(const ParserStateTransition& transition, bool finished_input = false, char processed_char = '\0')
+                    : transition(transition), finished_input(finished_input), processed_char(processed_char) {}
             };
 
             ParserStatesManager() : states_(jsoncpp::CreateStatesMap()) {}

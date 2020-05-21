@@ -39,7 +39,7 @@ namespace jsoncpp
             //it's very expensive
             JValue(const JValue& other);*/
 
-            //can only be moved        
+            //can only be moved for now
             JValue(JValue&& other) = default;
 
             std::optional<std::string> GetStringValue() const;

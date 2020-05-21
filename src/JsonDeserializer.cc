@@ -10,7 +10,7 @@ using std::unique_ptr;
 
 namespace jsoncpp 
 {
-    JsonDeserializer::JsonDeserializer(bool debug_output)
+    JsonDeserializer::JsonDeserializer(bool debug_output /*= false*/)
         : states_manager_(), value_stack_(),  machine_stack_(), debug_output_(debug_output)
     {
         
