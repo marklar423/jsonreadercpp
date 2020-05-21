@@ -24,6 +24,8 @@ namespace jsoncpp
     unique_ptr<ParserState> CreatePostPropertyState();
     unique_ptr<ParserState> CreateValueState();
     unique_ptr<ParserState> CreatePostValueState();
+    unique_ptr<ParserState> CreateIntState();
+    unique_ptr<ParserState> CreatePostIntParentState();
     unique_ptr<ParserState> CreateTrueState();
     unique_ptr<ParserState> CreateTrue2State();
     unique_ptr<ParserState> CreateTrue3State();
@@ -48,6 +50,8 @@ namespace jsoncpp
             CreatePostPropertyState(),
             CreateValueState(),
             CreatePostValueState(),
+            CreateIntState(),
+            CreatePostIntParentState(),
             CreateTrueState(),
             CreateTrue2State(),
             CreateTrue3State(),
@@ -173,8 +177,13 @@ namespace jsoncpp
          return unique_ptr<ParserState>(new ParserState(ParserStateType::Value, 
                                         {                                            
                                             { ParserInputSymbol::Whitespace, ParserStateType::Value },                                            
-                                            { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },                                
-                                            { ParserInputSymbol::Number, ParserStateType::Int },
+                                            { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },      
+                                                                      
+                                            ParserStateTransition( ParserInputSymbol::Number, ParserStateType::Int )
+                                                .SetCharDestination(ParserCharDestination::Value), 
+                                                                      
+                                            ParserStateTransition( ParserInputSymbol::Dash, ParserStateType::Int )
+                                                .SetCharDestination(ParserCharDestination::Value),
                                             
                                             ParserStateTransition( ParserInputSymbol::AlphaF, ParserStateType::False )                                           
                                                 .SetCharDestination(ParserCharDestination::Value),
@@ -217,6 +226,51 @@ namespace jsoncpp
                                                 .SetValueAction(ParserValueAction::Pop, {}),
 
                                             ParserStateTransition( ParserInputSymbol::CloseBrace, ParserStateType::PostObject)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::None)
+                                                .SetValueAction(ParserValueAction::Pop, {})
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+
+
+    unique_ptr<ParserState> CreateIntState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::Int, 
+                                        {   
+                                            ParserStateTransition( ParserInputSymbol::Number, ParserStateType::Int)
+                                                .SetCharDestination(ParserCharDestination::Value),
+
+                                            ParserStateTransition( ParserInputSymbol::Comma, ParserStateType::Value)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+
+                                            ParserStateTransition( ParserInputSymbol::Comma, ParserStateType::Value)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+
+                                            ParserStateTransition( ParserInputSymbol::Period, ParserStateType::Double)
+                                                .SetCharDestination(ParserCharDestination::Value),
+
+                                            ParserStateTransition( ParserInputSymbol::CloseBracket, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+
+                                            ParserStateTransition( ParserInputSymbol::CloseBrace, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int)
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+    
+    unique_ptr<ParserState> CreatePostIntParentState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostIntParent, 
+                                        {   
+                                            ParserStateTransition( ParserInputSymbol::None, ParserStateType::PostValue)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::None)
+                                                .SetValueAction(ParserValueAction::Pop, {}),
+
+                                            ParserStateTransition( ParserInputSymbol::None, ParserStateType::PostObject)
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::Pop, {})
 

@@ -27,6 +27,8 @@ namespace jsoncpp
         False3,
         False4,
         Int,
+        PostIntParent,
+        Double,
         Null,
         Null2,
         Null3
@@ -44,6 +46,8 @@ namespace jsoncpp
         Comma,
         Colon,
         Backslash,
+        Dash,
+        Period,
         AlphaA,
         AlphaB,
         AlphaE,
@@ -98,7 +102,9 @@ namespace jsoncpp
             case '"': return ParserInputSymbol::DoubleQuote;
             case ',': return ParserInputSymbol::Comma;
             case ':': return ParserInputSymbol::Colon;
-            case '\\': return ParserInputSymbol::Backslash;
+            case '\\': return ParserInputSymbol::Backslash;                   
+            case '-': return ParserInputSymbol::Dash;          
+            case '.': return ParserInputSymbol::Period;
             case 'a': return ParserInputSymbol::AlphaA;
             case 'b': return ParserInputSymbol::AlphaB;
             case 'e': return ParserInputSymbol::AlphaE;        
@@ -119,7 +125,7 @@ namespace jsoncpp
             case '7': 
             case '8': 
             case '9': 
-                return ParserInputSymbol::Number;          
+                return ParserInputSymbol::Number;   
             default:
                 return ParserInputSymbol::Other;
         }
@@ -142,6 +148,8 @@ namespace jsoncpp
             case ParserStateType::Value: return "Value";
             case ParserStateType::PostValue: return "PostValue";       
             case ParserStateType::Int: return "Int";      
+            case ParserStateType::PostIntParent: return "PostIntParent";
+            case ParserStateType::Double: return "Double";
             case ParserStateType::True: return "True";       
             case ParserStateType::True2: return "True2";       
             case ParserStateType::True3: return "True3"; 
