@@ -5,7 +5,7 @@ using std::string;
 namespace jsoncpp 
 {    
     JValue::JValue(JValueType value_type, 
-                    std::variant<std::string, int, double, bool> value) 
+                    std::variant<std::string, double, bool> value) 
             : name_(""), 
                 value_type_(value_type),
                 children_(), 
@@ -34,8 +34,7 @@ namespace jsoncpp
         switch (this->value_type_)
         {
             case JValueType::String:  return {std::get<string>(this->value_) };
-            case JValueType::Int:     return {std::to_string(std::get<int>(this->value_))};
-            case JValueType::Double:  return {std::to_string(std::get<double>(this->value_))};
+            case JValueType::Number:  return {std::to_string(std::get<double>(this->value_))};
             case JValueType::Boolean: return {std::get<bool>(this->value_) ? "true" : "false"};
             case JValueType::Null:    return {""};
 
@@ -43,22 +42,12 @@ namespace jsoncpp
         }
     }
 
-    std::optional<int> JValue::GetIntValue() const
+    std::optional<double> JValue::GetNumberValue() const
     {
-        if (this->value_type_ == JValueType::Int)
-            return { std::get<int>(this->value_) };
-        return {}; 
-    }
+        if (this->value_type_ == JValueType::Number)
+            return { std::get<double>(this->value_) };
 
-    std::optional<double> JValue::GetDoubleValue() const
-    {
-        switch (this->value_type_)
-        {
-            case JValueType::Int:     return { std::get<int>(this->value_) };
-            case JValueType::Double:  return { std::get<double>(this->value_) };
-            
-            default: return {};     
-        }
+        return {};             
     }
 
     std::optional<bool> JValue::GetBooleanValue() const

@@ -242,22 +242,22 @@ namespace jsoncpp
 
                                             ParserStateTransition( ParserInputSymbol::Comma, ParserStateType::Value)
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
-                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
-                                            ParserStateTransition( ParserInputSymbol::Comma, ParserStateType::Value)
+                                            ParserStateTransition( ParserInputSymbol::Comma, ParserStateType::Object)
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
-                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
                                             ParserStateTransition( ParserInputSymbol::Period, ParserStateType::Double)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition( ParserInputSymbol::CloseBracket, ParserStateType::PostIntParent)
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
-                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int),
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
                                             ParserStateTransition( ParserInputSymbol::CloseBrace, ParserStateType::PostIntParent)
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
-                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Int)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number)
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));
     }

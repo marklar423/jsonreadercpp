@@ -15,8 +15,7 @@ namespace jsoncpp
     enum class JValueType 
     {
         String,
-        Int,
-        Double,
+        Number,
         Boolean,
         Null,
         Object,
@@ -31,8 +30,7 @@ namespace jsoncpp
 
             //create a scalar value
             JValue(std::string value) : JValue(JValueType::String, {value}) {}
-            JValue(int value)         : JValue(JValueType::Int, {value}) {}
-            JValue(double value)      : JValue(JValueType::Double, {value}) {}
+            JValue(double value)      : JValue(JValueType::Number, {value}) {}
             JValue(bool value)        : JValue(JValueType::Boolean, {value}) {}
 
             /*//warning - a copy is recursive and copies all children
@@ -43,8 +41,7 @@ namespace jsoncpp
             JValue(JValue&& other) = default;
 
             std::optional<std::string> GetStringValue() const;
-            std::optional<int>         GetIntValue() const;
-            std::optional<double>      GetDoubleValue() const;
+            std::optional<double>      GetNumberValue() const;
             std::optional<bool>        GetBooleanValue() const;
 
             std::string GetName() const { return name_; }            
@@ -73,13 +70,13 @@ namespace jsoncpp
             auto end()   const { return children_.end(); }
 
         private:
-            JValue(JValueType value_type, std::variant<std::string, int, double, bool> value);
+            JValue(JValueType value_type, std::variant<std::string, double, bool> value);
 
             std::string name_;
             JValueType value_type_;
             std::vector<std::unique_ptr<JValue>> children_;
             std::unordered_map<std::string, size_t> children_name_indexes_;
-            std::variant<std::string, int, double, bool> value_;
+            std::variant<std::string, double, bool> value_;
     };
 }
 

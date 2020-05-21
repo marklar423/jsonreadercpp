@@ -32,9 +32,7 @@ namespace jsoncpp
 
             if (type == JValueType::String)
                 new_value = new JValue(accumulated_chars);
-            else if (type == JValueType::Int)
-                new_value = new JValue(std::stoi(accumulated_chars));
-            else if (type == JValueType::Double)
+            else if (type == JValueType::Number)
                 new_value = new JValue(std::stod(accumulated_chars));
             else if (type == JValueType::Boolean)
                 new_value = new JValue(accumulated_chars == "true");
