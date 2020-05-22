@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <memory>
 #include <iterator>
 #include <variant>
 #include <optional>
@@ -36,7 +35,7 @@ namespace jsoncpp
             JValue(JValue&& other) = default;
             JValue& operator=(JValue&& other) = default;
 
-            JValue Clone() const { return {*this}; }
+            //JValue Clone() const { return {*this}; }
 
             std::optional<std::string> GetStringValue() const;
             std::optional<double>      GetNumberValue() const;
@@ -49,10 +48,10 @@ namespace jsoncpp
             bool        HasProperty(const std::string& name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
             
             //returns false if this parent object is not an array
-            bool AddArrayChild(std::unique_ptr<JValue> value);
+            bool AddArrayChild(JValue value);
             
             //returns true if no property with this name already exists, false otherwise
-            bool AddObjectChild(std::string name, std::unique_ptr<JValue> value);
+            bool AddObjectChild(std::string name, JValue value);
 
             //returns true if the element exists, false otherwise
             bool RemoveChild(size_t index);
@@ -60,12 +59,12 @@ namespace jsoncpp
             bool RemoveChild(const std::string& name);
 
             //get the nth child element, either object property or array item
-            JValue& operator[](size_t index) const { return *children_[index]; }
+            const JValue& operator[](size_t index) const { return children_.at(index); }
             //get an object property by name
-            JValue& operator[](const std::string& name) { return this[children_name_indexes_[name]]; }
+            const JValue& operator[](const std::string& name) const { return this[children_name_indexes_.at(name)]; }
             
-            auto begin() const { return children_.begin(); }
-            auto end()   const { return children_.end(); }
+            const auto begin() const { return children_.begin(); }
+            const auto end()   const { return children_.end(); }
 
         private:
             JValue(JValueType value_type, std::variant<std::string, double, bool> value);
@@ -73,11 +72,11 @@ namespace jsoncpp
             //a copy is recursive and copies all children; it's very expensive
             //force the user to use the clone() method so that it doesn't happen by accident
             JValue(const JValue& other) = default;
-            JValue& operator=(JValue& other) = default;
+            JValue& operator=(const JValue& other) = default;
 
             std::string name_;
             JValueType value_type_;
-            std::vector<std::unique_ptr<JValue>> children_;
+            std::vector<JValue> children_;
             std::unordered_map<std::string, size_t> children_name_indexes_;
             std::variant<std::string, double, bool> value_;
     };

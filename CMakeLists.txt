@@ -7,4 +7,6 @@ file(GLOB SOURCES src/*.cc)
 
 add_executable(jsoncpp ${SOURCES})
 
-set_property(TARGET jsoncpp PROPERTY CXX_STANDARD 17)
+set_target_properties(jsoncpp PROPERTIES 
+                        CXX_STANDARD 17
+                        CXX_EXTENSIONS OFF)

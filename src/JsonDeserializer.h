@@ -1,7 +1,7 @@
 #ifndef JSONCPP_JSONDESERIALIZER_H_
 #define JSONCPP_JSONDESERIALIZER_H_
 
-#include <memory>
+#include <optional>
 #include <istream>
 
 #include "JValue.h"
@@ -18,7 +18,7 @@ namespace jsoncpp
         public:
             JsonDeserializer(bool debug_output = false);
 
-            std::unique_ptr<JValue> ParseJsonString(std::istream& input);
+            std::optional<JValue> ParseJsonString(std::istream& input);
 
         private:
             bool debug_output_;            

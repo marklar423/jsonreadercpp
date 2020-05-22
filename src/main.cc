@@ -13,11 +13,11 @@ void PrintJsonTree(const JValue& root, string prefix);
 
 int main(int argc, char *argv[])
 {
-	JsonDeserializer parser(true);
+	JsonDeserializer parser;
 	auto parsed_json = parser.ParseJsonString(cin);
 
-	if (parsed_json.get() != nullptr)
-		PrintJsonTree(*parsed_json, "");
+	if (parsed_json.has_value())
+		PrintJsonTree(parsed_json.value(), "");
 	else
 		cout << "No root object in JSON\n";
 	
@@ -31,27 +31,27 @@ void PrintJsonTree(const JValue& root, string prefix)
 
 	if (root.GetNumberOfChildren() > 0)
 	{
-		for (auto& value : root) 
+		for (const auto& value : root) 
 		{
-			string name(value->GetName());
+			string name(value.GetName());
 
 			if (name.length() == 0)
 				name = std::to_string(i);
 			
 			cout << prefix << "[" << name << "]: ";
 
-			if (value->GetValueType() == JValueType::Object)
-				cout << "[object[" << value->GetNumberOfChildren() << "]]\n";
-			else if (value->GetValueType() == JValueType::Array)
-				cout << "[array[" << value->GetNumberOfChildren() << "]]\n";
-			else if (value->GetValueType() == JValueType::Null)
+			if (value.GetValueType() == JValueType::Object)
+				cout << "[object[" << value.GetNumberOfChildren() << "]]\n";
+			else if (value.GetValueType() == JValueType::Array)
+				cout << "[array[" << value.GetNumberOfChildren() << "]]\n";
+			else if (value.GetValueType() == JValueType::Null)
 				cout << "[null]\n";
 			else
-				cout << value->GetStringValue().value_or("") << "\n";
+				cout << value.GetStringValue().value_or("") << "\n";
 			
-			if (value->GetNumberOfChildren() > 0)
+			if (value.GetNumberOfChildren() > 0)
 			{
-				PrintJsonTree(*value, prefix + "[" + name + "]");
+				PrintJsonTree(value, prefix + "[" + name + "]");
 			}
 
 			i++;

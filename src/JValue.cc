@@ -14,21 +14,6 @@ namespace jsoncpp
     {
     }
 
-    /*
-    explicit JValue::JValue(const JValue& other)
-                : children_()
-            {
-                name_ = other.name_;
-                children_name_indexes_ = other.children_name_indexes_;
-                value_type_ = other.value_type_;
-                value_ = other.value_;
-                
-                for (auto& child : other.children_) 
-                {
-                    children_.push_back(std::make_unique(new JValue(*child)));
-                }
-            }*/
-
     std::optional<string> JValue::GetStringValue() const
     {
         switch (this->value_type_)
@@ -58,7 +43,7 @@ namespace jsoncpp
     }
 
         
-    bool JValue::AddArrayChild(std::unique_ptr<JValue> value)
+    bool JValue::AddArrayChild(JValue value)
     {
         bool success = false;
 
@@ -72,14 +57,14 @@ namespace jsoncpp
     }
     
     
-    bool JValue::AddObjectChild(std::string name, std::unique_ptr<JValue> value)
+    bool JValue::AddObjectChild(std::string name, JValue value)
     {
         bool success = false;
 
         if (this->value_type_ == JValueType::Object && name.length() > 0 && !this->HasProperty(name))
         {
             success = true;
-            value->name_ = name;
+            value.name_ = name;
             this->children_.emplace_back(std::move(value));
             this->children_name_indexes_[name] = this->children_.size() - 1;
         }
@@ -93,7 +78,7 @@ namespace jsoncpp
         if (index < this->children_.size())
         {
             exists = true;            
-            string child_name = this->children_[index]->name_;
+            string child_name = this->children_[index].name_;
             this->children_.erase(this->children_.begin() + index);
 
             if (this->children_name_indexes_.find(child_name) != this->children_name_indexes_.end())

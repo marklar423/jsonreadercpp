@@ -4,7 +4,7 @@
 
 using std::string;
 using std::pair;
-using std::unique_ptr;
+using std::optional;
 
 namespace jsoncpp 
 {
@@ -14,7 +14,7 @@ namespace jsoncpp
         
     } 
 
-    unique_ptr<JValue> JsonDeserializer::ParseJsonString(std::istream& input) 
+    optional<JValue> JsonDeserializer::ParseJsonString(std::istream& input) 
     {        
         auto current_state_type = ParserStateType::Start;
         bool finished_input = false;
@@ -45,7 +45,7 @@ namespace jsoncpp
             }
         }
 
-        unique_ptr<JValue> result(nullptr);
+        optional<JValue> result;
 
         if (value_stack_.GetSize() > 1)
         {
@@ -54,7 +54,7 @@ namespace jsoncpp
         }
         else
         {
-            result = value_stack_.RemoveRootValue();
+            result = std::move(value_stack_.RemoveRootValue());
         }
 
         return result;
