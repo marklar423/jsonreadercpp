@@ -6,7 +6,6 @@
 
 #include "ParserStatesSymbols.h"
 #include "ParserStateTransition.h"
-#include "JValue.h"
 
 namespace jsoncpp 
 { 
@@ -17,7 +16,14 @@ namespace jsoncpp
 
             ParserState(ParserStateType type, 
                         std::initializer_list<ParserStateTransition> transitions = {},
-                        ParserStateTransition else_transition = {ParserInputSymbol::None, ParserStateType::Error});
+                        ParserStateTransition else_transition = {ParserInputSymbol::None, ParserStateType::Error})
+                            : state_type_(type), transitions_(), else_transition_(else_transition)
+            {
+                for (auto& transition : transitions)
+                {
+                    this->AddTransition(transition);
+                }
+            }
 
             ParserStateType GetStateType() const { return state_type_; }
             
@@ -37,12 +43,10 @@ namespace jsoncpp
                             GetTransition(input_symbol, stack_symbol) : else_transition_;
             }
 
-            void AddTransition(const ParserStateTransition& transition) { transitions_[transition.input].emplace(transition.stack_pop, transition); }
+            void AddTransition(ParserStateTransition transition) { transitions_[transition.input].emplace(transition.stack_pop, transition); }
 
         private:
             ParserStateType state_type_;
-
-        protected:
             TransitionLookup transitions_;
             ParserStateTransition else_transition_;
 

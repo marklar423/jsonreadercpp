@@ -3,17 +3,7 @@
 
 namespace jsoncpp
 {
-    ParserState::ParserState(ParserStateType type, 
-                        std::initializer_list<ParserStateTransition> transitions /*= {}*/,
-                        ParserStateTransition else_transition /*= {ParserInputSymbol::None, ParserStateType::Error}*/)
-        : state_type_(type), transitions_(), else_transition_(else_transition)
-    {
-        for (auto& transition : transitions)
-        {
-            this->AddTransition(transition);
-        }
-    }
-
+    
     bool ParserState::HasTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const
     {
         bool found = false;

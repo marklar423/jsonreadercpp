@@ -48,7 +48,7 @@ namespace jsoncpp
             JValueType  GetValueType() const { return value_type_; }             
             size_t      GetNumberOfChildren() const { return children_.size(); }
             const auto& GetChildren() const { return children_; }
-            bool        HasProperty(std::string name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
+            bool        HasProperty(const std::string& name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
             
             //returns false if this parent object is not an array
             bool AddArrayChild(std::unique_ptr<JValue> value);
@@ -59,7 +59,7 @@ namespace jsoncpp
             //returns true if the element exists, false otherwise
             bool RemoveChild(size_t index);
             //returns true if the element exists, false otherwise
-            bool RemoveChild(std::string name);
+            bool RemoveChild(const std::string& name);
 
             //get the nth child element, either object property or array item
             JValue& operator[](size_t index) const { return *children_[index]; }

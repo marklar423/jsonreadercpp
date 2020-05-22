@@ -102,7 +102,7 @@ namespace jsoncpp
         return exists;
     }
 
-    bool JValue::RemoveChild(string name)
+    bool JValue::RemoveChild(const string& name)
     {
         bool exists = false;
 

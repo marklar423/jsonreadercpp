@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "ParserStateImpls.h"
-
 using std::string;
 using std::pair;
 using std::unique_ptr;
@@ -82,12 +80,12 @@ namespace jsoncpp
             //JValue actions
             if (next_transition.value_action == ParserValueAction::Push || next_transition.value_action == ParserValueAction::PushPop)
             {
-                value_stack_.PushNewValue(next_transition.value_push_type.value());
+                value_stack_.PushJValue(next_transition.value_push_type.value());
             }
 
             if (next_transition.value_action == ParserValueAction::Pop || next_transition.value_action == ParserValueAction::PushPop)
             {
-                value_stack_.PopNewValue();
+                value_stack_.PopJValue();
             }
         }
 

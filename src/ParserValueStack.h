@@ -15,8 +15,8 @@ namespace jsoncpp
     {
         public:
             void AccumulateInput(char input_char, ParserCharDestination destination);
-            void PushNewValue(JValueType type);
-            void PopNewValue();
+            void PushJValue(JValueType type);
+            void PopJValue();
             std::unique_ptr<JValue> RemoveRootValue();
             
             size_t GetSize() const { return value_stack_.size(); }

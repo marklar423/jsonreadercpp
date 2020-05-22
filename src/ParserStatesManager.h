@@ -2,7 +2,7 @@
 #define JSONCPP_PARSERSTATESMANAGER_H
 
 #include <unordered_map>
-#include <sstream>
+#include <istream>
 #include <memory>
 
 #include "ParserStatesSymbols.h"

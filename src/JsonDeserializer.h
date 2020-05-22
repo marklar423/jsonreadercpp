@@ -1,13 +1,10 @@
 #ifndef JSONCPP_JSONDESERIALIZER_H_
 #define JSONCPP_JSONDESERIALIZER_H_
 
-#include <unordered_map>
 #include <memory>
-#include <sstream>
-#include <utility>
+#include <istream>
 
 #include "JValue.h"
-#include "ParserState.h"
 #include "ParserStatesSymbols.h"
 #include "ParserValueStack.h"
 #include "ParserMachineStack.h"

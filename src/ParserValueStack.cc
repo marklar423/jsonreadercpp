@@ -18,7 +18,7 @@ namespace jsoncpp
     }
 
 
-    void ParserValueStack::PushNewValue(JValueType type)
+    void ParserValueStack::PushJValue(JValueType type)
     {
         JValue* new_value;
 
@@ -48,7 +48,7 @@ namespace jsoncpp
         this->scalar_value_.str("");
     }
 
-    void ParserValueStack::PopNewValue()
+    void ParserValueStack::PopJValue()
     {
         if (this->value_stack_.size() > 1) //root value?
         {
