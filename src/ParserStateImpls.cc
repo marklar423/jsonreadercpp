@@ -26,6 +26,9 @@ namespace jsoncpp
     unique_ptr<ParserState> CreatePostValueState();
     unique_ptr<ParserState> CreateIntState();
     unique_ptr<ParserState> CreatePostIntParentState();
+    unique_ptr<ParserState> CreateDoubleState();
+    unique_ptr<ParserState> CreateExponentSignState();
+    unique_ptr<ParserState> CreateExponentDigitsState();
     unique_ptr<ParserState> CreateTrueState();
     unique_ptr<ParserState> CreateTrue2State();
     unique_ptr<ParserState> CreateTrue3State();
@@ -51,7 +54,10 @@ namespace jsoncpp
             CreateValueState(),
             CreatePostValueState(),
             CreateIntState(),
-            CreatePostIntParentState(),
+            CreatePostIntParentState(),           
+            CreateDoubleState(),
+            CreateExponentSignState(),
+            CreateExponentDigitsState(),
             CreateTrueState(),
             CreateTrue2State(),
             CreateTrue3State(),
@@ -257,7 +263,10 @@ namespace jsoncpp
 
                                             ParserStateTransition( ParserInputSymbol::CloseBrace, ParserStateType::PostIntParent)
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
-                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition( ParserInputSymbol::Whitespace, ParserStateType::PostValue)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));
     }
@@ -273,6 +282,83 @@ namespace jsoncpp
                                             ParserStateTransition( ParserInputSymbol::None, ParserStateType::PostObject)
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::Pop, {})
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+
+    unique_ptr<ParserState> CreateDoubleState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::Double, 
+                                        { 
+                                            ParserStateTransition(ParserInputSymbol::Number, ParserStateType::Double)
+                                                .SetCharDestination(ParserCharDestination::Value),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::AlphaE, ParserStateType::ExponentSign)
+                                                .SetCharDestination(ParserCharDestination::Value),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::AlphaECap, ParserStateType::ExponentSign)
+                                                .SetCharDestination(ParserCharDestination::Value),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::Whitespace, ParserStateType::PostValue)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::Comma, ParserStateType::Object)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::Comma, ParserStateType::Value)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+
+                                            ParserStateTransition(ParserInputSymbol::CloseBrace, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::CloseBracket, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                            
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+
+    unique_ptr<ParserState> CreateExponentSignState()
+    {
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::ExponentSign, 
+                                        { 
+                                            ParserStateTransition(ParserInputSymbol::Plus, ParserStateType::ExponentDigits)
+                                                .SetCharDestination(ParserCharDestination::Value),
+
+                                            ParserStateTransition(ParserInputSymbol::Dash, ParserStateType::ExponentDigits)
+                                                .SetCharDestination(ParserCharDestination::Value) 
+
+                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+    }
+
+    unique_ptr<ParserState> CreateExponentDigitsState()
+    {  
+        return unique_ptr<ParserState>(new ParserState(ParserStateType::ExponentDigits, 
+                                        {       
+                                            ParserStateTransition(ParserInputSymbol::Number, ParserStateType::ExponentDigits)
+                                                .SetCharDestination(ParserCharDestination::Value),
+
+                                            ParserStateTransition(ParserInputSymbol::Whitespace, ParserStateType::PostValue)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+
+                                            ParserStateTransition(ParserInputSymbol::Comma, ParserStateType::Object)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::Comma, ParserStateType::Value)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::CloseBrace, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Object, ParserStackSymbol::Object)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
+                                                
+                                            ParserStateTransition(ParserInputSymbol::CloseBracket, ParserStateType::PostIntParent)
+                                                .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
+                                                .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));
     }

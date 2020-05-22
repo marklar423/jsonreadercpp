@@ -29,6 +29,8 @@ namespace jsoncpp
         Int,
         PostIntParent,
         Double,
+        ExponentSign,
+        ExponentDigits,
         Null,
         Null2,
         Null3
@@ -47,10 +49,12 @@ namespace jsoncpp
         Colon,
         Backslash,
         Dash,
+        Plus,
         Period,
         AlphaA,
         AlphaB,
         AlphaE,
+        AlphaECap,
         AlphaF,
         AlphaL,
         AlphaN,
@@ -103,11 +107,13 @@ namespace jsoncpp
             case ',': return ParserInputSymbol::Comma;
             case ':': return ParserInputSymbol::Colon;
             case '\\': return ParserInputSymbol::Backslash;                   
-            case '-': return ParserInputSymbol::Dash;          
+            case '-': return ParserInputSymbol::Dash;                    
+            case '+': return ParserInputSymbol::Plus;          
             case '.': return ParserInputSymbol::Period;
             case 'a': return ParserInputSymbol::AlphaA;
             case 'b': return ParserInputSymbol::AlphaB;
             case 'e': return ParserInputSymbol::AlphaE;        
+            case 'E': return ParserInputSymbol::AlphaECap;
             case 'f': return ParserInputSymbol::AlphaF;
             case 'l': return ParserInputSymbol::AlphaL;
             case 'n': return ParserInputSymbol::AlphaN;
