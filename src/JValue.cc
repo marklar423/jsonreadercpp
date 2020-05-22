@@ -65,7 +65,7 @@ namespace jsoncpp
         if (this->value_type_ == JValueType::Array)
         {
             success = true;
-            this->children_.push_back(std::move(value));
+            this->children_.emplace_back(std::move(value));
         }
 
         return success;
@@ -80,7 +80,7 @@ namespace jsoncpp
         {
             success = true;
             value->name_ = name;
-            this->children_.push_back(std::move(value));
+            this->children_.emplace_back(std::move(value));
             this->children_name_indexes_[name] = this->children_.size() - 1;
         }
 

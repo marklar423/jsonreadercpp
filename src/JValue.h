@@ -33,12 +33,10 @@ namespace jsoncpp
             JValue(double value)      : JValue(JValueType::Number, {value}) {}
             JValue(bool value)        : JValue(JValueType::Boolean, {value}) {}
 
-            /*//warning - a copy is recursive and copies all children
-            //it's very expensive
-            JValue(const JValue& other);*/
-
-            //can only be moved for now
             JValue(JValue&& other) = default;
+            JValue& operator=(JValue&& other) = default;
+
+            JValue Clone() const { return {*this}; }
 
             std::optional<std::string> GetStringValue() const;
             std::optional<double>      GetNumberValue() const;
@@ -71,6 +69,11 @@ namespace jsoncpp
 
         private:
             JValue(JValueType value_type, std::variant<std::string, double, bool> value);
+
+            //a copy is recursive and copies all children; it's very expensive
+            //force the user to use the clone() method so that it doesn't happen by accident
+            JValue(const JValue& other) = default;
+            JValue& operator=(JValue& other) = default;
 
             std::string name_;
             JValueType value_type_;
