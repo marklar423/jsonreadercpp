@@ -35,7 +35,7 @@ namespace jsoncpp
             JValue(JValue&& other) = default;
             JValue& operator=(JValue&& other) = default;
 
-            //JValue Clone() const { return {*this}; }
+            JValue Clone() const { return JValue(*this); }
 
             std::optional<std::string> GetStringValue() const;
             std::optional<double>      GetNumberValue() const;
@@ -71,8 +71,10 @@ namespace jsoncpp
 
             //a copy is recursive and copies all children; it's very expensive
             //force the user to use the clone() method so that it doesn't happen by accident
-            JValue(const JValue& other) = default;
-            JValue& operator=(const JValue& other) = default;
+            JValue(const JValue& other);
+            JValue& operator=(const JValue& other);
+
+            std::vector<JValue> CopyChildren(const JValue& other);
 
             std::string name_;
             JValueType value_type_;

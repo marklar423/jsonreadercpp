@@ -78,7 +78,7 @@ namespace jsoncpp
             states_map.emplace(state_type, std::move(state));
         }
 
-        return std::move(states_map);
+        return states_map;
     }   
 
 

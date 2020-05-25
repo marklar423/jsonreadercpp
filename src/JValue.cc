@@ -14,6 +14,37 @@ namespace jsoncpp
     {
     }
 
+    JValue::JValue(const JValue& other)
+        : name_(other.name_),
+            value_type_(other.value_type_),
+            children_(std::move(CopyChildren(other))),
+            children_name_indexes_(other.children_name_indexes_),
+            value_(other.value_)
+    {
+    }
+
+    JValue& JValue::operator=(const JValue& other)
+    {
+        name_ = other.name_;
+        value_type_ = other.value_type_;
+        children_ = std::move(CopyChildren(other));
+        children_name_indexes_ = other.children_name_indexes_;
+        value_ = other.value_;
+    }
+
+    std::vector<JValue> JValue::CopyChildren(const JValue& other)
+    {
+        std::vector<JValue> copy;
+        copy.reserve(other.children_.size());
+
+        for (const auto& child : other.children_)
+        {
+            copy.emplace_back(child.Clone());
+        }
+
+        return copy;
+    }
+
     std::optional<string> JValue::GetStringValue() const
     {
         switch (this->value_type_)
