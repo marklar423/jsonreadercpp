@@ -7,14 +7,19 @@ using std::optional;
 
 namespace jsoncpp
 {
-    void ParserValueStack::AccumulateInput(char input_char, ParserCharDestination destination)
+    void ParserValueStack::AccumulateInput(char input_char, ParserCharDestination destination, ParserStateType current_state_type)
     {
+        if (current_state_type == ParserStateType::EscapeChar)
+        {            
+            input_char = TranslateEscapeChar(input_char);
+        }
+
         if (input_char != '\0')
-        {
+        {          
             if (destination == ParserCharDestination::Name)
                 this->property_name_ << input_char;
             else if (destination == ParserCharDestination::Value)
-                this->scalar_value_ << input_char;
+                this->scalar_value_ << input_char;            
         }
     }
 
@@ -79,5 +84,19 @@ namespace jsoncpp
         }
 
         return result;
+    }
+
+    char ParserValueStack::TranslateEscapeChar(char escaped)
+    {
+        switch (escaped)
+        {
+            case 'b': return '\b';
+            case 'f': return '\f';
+            case 'n': return '\n';
+            case 'r': return '\r';
+            case 't': return '\t';
+        }
+
+        return escaped;
     }
 }

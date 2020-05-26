@@ -75,7 +75,7 @@ namespace jsoncpp
             machine_stack_.PopPush(next_transition.stack_pop, next_transition.stack_push);
 
             //input actions
-            value_stack_.AccumulateInput(next_transition_container.processed_char, next_transition.char_destination);
+            value_stack_.AccumulateInput(next_transition_container.processed_char, next_transition.char_destination, current_state_type);
 
             //JValue actions
             if (next_transition.value_action == ParserValueAction::Push || next_transition.value_action == ParserValueAction::PushPop)

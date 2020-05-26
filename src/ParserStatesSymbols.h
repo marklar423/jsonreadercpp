@@ -17,6 +17,7 @@ namespace jsoncpp
         ValueString,
         PropertyString,
         EscapeChar,
+        Unicode,
         Value,
         PostValue,
         True,
@@ -157,6 +158,7 @@ namespace jsoncpp
             case ParserStateType::PropertyString: return "PropertyString";
             case ParserStateType::ValueString: return "ValueString";
             case ParserStateType::EscapeChar: return "EscapeChar";
+            case ParserStateType::Unicode: return "Unicode";
             case ParserStateType::Value: return "Value";
             case ParserStateType::PostValue: return "PostValue";       
             case ParserStateType::Int: return "Int";      
