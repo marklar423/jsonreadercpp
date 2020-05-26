@@ -20,20 +20,13 @@ namespace jsoncpp
         Value,
         PostValue,
         True,
-        True2,
-        True3,
         False,
-        False2,
-        False3,
-        False4,
         Int,
         PostIntParent,
         Double,
         ExponentSign,
         ExponentDigits,
-        Null,
-        Null2,
-        Null3
+        Null
     };
 
     enum class ParserInputSymbol
@@ -48,6 +41,7 @@ namespace jsoncpp
         Comma,
         Colon,
         Backslash,
+        Forwardslash,
         Dash,
         Plus,
         Period,
@@ -71,7 +65,18 @@ namespace jsoncpp
         None,
         Start,
         Object,
-        Array
+        Array,
+        ValueString,
+        PropertyString,
+        AlphaA,
+        AlphaE,
+        AlphaF,
+        AlphaL,
+        AlphaN,
+        AlphaR,
+        AlphaS,
+        AlphaT,
+        AlphaU,
     };
 
     enum class ParserCharDestination
@@ -106,7 +111,8 @@ namespace jsoncpp
             case '"': return ParserInputSymbol::DoubleQuote;
             case ',': return ParserInputSymbol::Comma;
             case ':': return ParserInputSymbol::Colon;
-            case '\\': return ParserInputSymbol::Backslash;                   
+            case '\\': return ParserInputSymbol::Backslash;       
+            case '/': return ParserInputSymbol::Forwardslash;            
             case '-': return ParserInputSymbol::Dash;                    
             case '+': return ParserInputSymbol::Plus;          
             case '.': return ParserInputSymbol::Period;
@@ -157,15 +163,8 @@ namespace jsoncpp
             case ParserStateType::PostIntParent: return "PostIntParent";
             case ParserStateType::Double: return "Double";
             case ParserStateType::True: return "True";       
-            case ParserStateType::True2: return "True2";       
-            case ParserStateType::True3: return "True3"; 
             case ParserStateType::False: return "False"; 
-            case ParserStateType::False2: return "False2"; 
-            case ParserStateType::False3: return "False3"; 
-            case ParserStateType::False4: return "False4"; 
             case ParserStateType::Null: return "Null"; 
-            case ParserStateType::Null2: return "Null2"; 
-            case ParserStateType::Null3: return "Null3"; 
         }
 
         return "[N/A]";
