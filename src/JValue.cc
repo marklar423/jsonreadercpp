@@ -74,21 +74,22 @@ namespace jsoncpp
     }
 
         
-    bool JValue::AddArrayChild(JValue value)
+    bool JValue::AddArrayChild(JValue&& value)
     {
         bool success = false;
 
         if (this->value_type_ == JValueType::Array)
         {
             success = true;
-            this->children_.emplace_back(std::move(value));
+            //move() here is superfluous, but leaving it just in case `value` changes to a regular value in the future
+            this->children_.emplace_back(std::move(value)); 
         }
 
         return success;
     }
     
     
-    bool JValue::AddObjectChild(std::string name, JValue value)
+    bool JValue::AddObjectChild(std::string name, JValue&& value)
     {
         bool success = false;
 
@@ -96,6 +97,7 @@ namespace jsoncpp
         {
             success = true;
             value.name_ = name;
+            //move() here is superfluous, but leaving it just in case `value` changes to a regular value in the future
             this->children_.emplace_back(std::move(value));
             this->children_name_indexes_[name] = this->children_.size() - 1;
         }

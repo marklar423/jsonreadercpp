@@ -48,10 +48,12 @@ namespace jsoncpp
             bool        HasProperty(const std::string& name) { return children_name_indexes_.find(name) != children_name_indexes_.end(); }
             
             //returns false if this parent object is not an array
-            bool AddArrayChild(JValue value);
+            //takes an rvalue since JValue can only be moved (or Clone()d and then moved)
+            bool AddArrayChild(JValue&& value);
             
             //returns true if no property with this name already exists, false otherwise
-            bool AddObjectChild(std::string name, JValue value);
+            //takes an rvalue since JValue can only be moved (or Clone()d and then moved)
+            bool AddObjectChild(std::string name, JValue&& value);
 
             //returns true if the element exists, false otherwise
             bool RemoveChild(size_t index);
