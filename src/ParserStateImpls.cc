@@ -183,15 +183,15 @@ namespace jsoncpp
                                                 .SetCharDestination(ParserCharDestination::Value),
                                             
                                             ParserStateTransition( ParserInputSymbol::AlphaF, ParserStateType::False )      
-                                                .SetStack(ParserStackSymbol::AlphaF, ParserStackSymbol::None)                                     
+                                                .SetStack(ParserStackSymbol::None, ParserStackSymbol::AlphaF)  
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition( ParserInputSymbol::AlphaT, ParserStateType::True )   
-                                                .SetStack(ParserStackSymbol::AlphaT, ParserStackSymbol::None)          
+                                                .SetStack(ParserStackSymbol::None, ParserStackSymbol::AlphaT)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition( ParserInputSymbol::AlphaN, ParserStateType::Null )
-                                                .SetStack(ParserStackSymbol::AlphaN, ParserStackSymbol::None),            
+                                                .SetStack(ParserStackSymbol::None, ParserStackSymbol::AlphaN),            
                                             
                                             ParserStateTransition(ParserInputSymbol::OpenBracket, ParserStateType::Value)
                                                 .SetStack(ParserStackSymbol::None, ParserStackSymbol::Array)
