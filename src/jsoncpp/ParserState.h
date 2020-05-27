@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <initializer_list>
 
-#include "ParserStatesSymbols.h"
-#include "ParserStateTransition.h"
+#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsoncpp/ParserStateTransition.h"
 
 namespace jsoncpp 
 { 

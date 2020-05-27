@@ -3,7 +3,7 @@
 
 #include <stack>
 
-#include "ParserStatesSymbols.h"
+#include "jsoncpp/ParserStatesSymbols.h"
 
 namespace jsoncpp
 {

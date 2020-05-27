@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <memory>
 
-#include "ParserStatesSymbols.h"
-#include "ParserState.h"
+#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsoncpp/ParserState.h"
 
-namespace jsoncpp 
+namespace jsoncpp::states
 {
     std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> CreateStatesMap();
 }

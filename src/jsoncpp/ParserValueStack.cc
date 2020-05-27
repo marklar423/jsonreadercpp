@@ -1,4 +1,4 @@
-#include "ParserValueStack.h"
+#include "jsoncpp/ParserValueStack.h"
 
 
 using std::string;
@@ -11,7 +11,7 @@ namespace jsoncpp
     {
         if (current_state_type == ParserStateType::EscapeChar)
         {            
-            input_char = TranslateEscapeChar(input_char);
+            input_char = (input_char == 'u') ? '\0' : TranslateEscapeChar(input_char);
         }
 
         if (input_char != '\0')

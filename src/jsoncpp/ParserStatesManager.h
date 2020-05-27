@@ -5,9 +5,9 @@
 #include <istream>
 #include <memory>
 
-#include "ParserStatesSymbols.h"
-#include "ParserState.h"
-#include "ParserStateImpls.h"
+#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsoncpp/ParserState.h"
+#include "jsoncpp/states/ParserStateImpls.h"
 
 namespace jsoncpp 
 {
@@ -24,7 +24,7 @@ namespace jsoncpp
                     : transition(transition), finished_input(finished_input), processed_char(processed_char) {}
             };
 
-            ParserStatesManager() : states_(jsoncpp::CreateStatesMap()) {}
+            ParserStatesManager() : states_(jsoncpp::states::CreateStatesMap()) {}
 
             NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top);
 
