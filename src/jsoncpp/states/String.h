@@ -12,6 +12,8 @@ namespace jsoncpp::states
     std::unique_ptr<ParserState> CreateValueStringState();
     std::unique_ptr<ParserState> CreatePropertyStringState();
     std::unique_ptr<ParserState> CreateEscapeCharState();    
+    std::unique_ptr<ParserState> CreateUnicodeValueState();
+    std::unique_ptr<ParserState> CreateUnicodePropertyState();
 }
 
 

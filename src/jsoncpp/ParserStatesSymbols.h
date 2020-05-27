@@ -17,7 +17,8 @@ namespace jsoncpp
         ValueString,
         PropertyString,
         EscapeChar,
-        Unicode,
+        UnicodeValue,
+        UnicodeProperty,
         Value,
         PostValue,
         True,
@@ -48,6 +49,8 @@ namespace jsoncpp
         Period,
         AlphaA,
         AlphaB,
+        AlphaC,
+        AlphaD,
         AlphaE,
         AlphaECap,
         AlphaF,
@@ -69,15 +72,10 @@ namespace jsoncpp
         Array,
         ValueString,
         PropertyString,
-        AlphaA,
-        AlphaE,
-        AlphaF,
-        AlphaL,
-        AlphaN,
-        AlphaR,
-        AlphaS,
-        AlphaT,
-        AlphaU,
+        First,
+        Second,
+        Third,
+        Fourth
     };
 
     enum class ParserCharDestination
@@ -119,6 +117,8 @@ namespace jsoncpp
             case '.': return ParserInputSymbol::Period;
             case 'a': return ParserInputSymbol::AlphaA;
             case 'b': return ParserInputSymbol::AlphaB;
+            case 'c': return ParserInputSymbol::AlphaC;
+            case 'd': return ParserInputSymbol::AlphaD;
             case 'e': return ParserInputSymbol::AlphaE;        
             case 'E': return ParserInputSymbol::AlphaECap;
             case 'f': return ParserInputSymbol::AlphaF;
@@ -158,7 +158,8 @@ namespace jsoncpp
             case ParserStateType::PropertyString: return "PropertyString";
             case ParserStateType::ValueString: return "ValueString";
             case ParserStateType::EscapeChar: return "EscapeChar";
-            case ParserStateType::Unicode: return "Unicode";
+            case ParserStateType::UnicodeValue: return "UnicodeValue";
+            case ParserStateType::UnicodeProperty: return "UnicodeProperty";
             case ParserStateType::Value: return "Value";
             case ParserStateType::PostValue: return "PostValue";       
             case ParserStateType::Int: return "Int";      

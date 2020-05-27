@@ -11,15 +11,15 @@ namespace jsoncpp::states
         return unique_ptr<ParserState>(new ParserState(ParserStateType::True, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaR, ParserStateType::True)
-                                                .SetStack(ParserStackSymbol::AlphaT, ParserStackSymbol::AlphaR)
+                                                .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::True)
-                                                .SetStack(ParserStackSymbol::AlphaR, ParserStackSymbol::AlphaU)
+                                                .SetStack(ParserStackSymbol::Second, ParserStackSymbol::Third)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaE, ParserStateType::PostValue)
-                                                .SetStack(ParserStackSymbol::AlphaU, ParserStackSymbol::None)
+                                                .SetStack(ParserStackSymbol::Third, ParserStackSymbol::None)
                                                 .SetCharDestination(ParserCharDestination::Value) 
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
 
@@ -31,19 +31,19 @@ namespace jsoncpp::states
         return unique_ptr<ParserState>(new ParserState(ParserStateType::False, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaA, ParserStateType::False)
-                                                .SetStack(ParserStackSymbol::AlphaF, ParserStackSymbol::AlphaA)
+                                                .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::False)
-                                                .SetStack(ParserStackSymbol::AlphaA, ParserStackSymbol::AlphaL)
+                                                .SetStack(ParserStackSymbol::Second, ParserStackSymbol::Third)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaS, ParserStateType::False)
-                                                .SetStack(ParserStackSymbol::AlphaL, ParserStackSymbol::AlphaS)
+                                                .SetStack(ParserStackSymbol::Third, ParserStackSymbol::Fourth)
                                                 .SetCharDestination(ParserCharDestination::Value),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaE, ParserStateType::PostValue)
-                                                .SetStack(ParserStackSymbol::AlphaS, ParserStackSymbol::None)
+                                                .SetStack(ParserStackSymbol::Fourth, ParserStackSymbol::None)
                                                 .SetCharDestination(ParserCharDestination::Value) 
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
 
@@ -55,13 +55,13 @@ namespace jsoncpp::states
         return unique_ptr<ParserState>(new ParserState(ParserStateType::Null, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::Null)
-                                                .SetStack(ParserStackSymbol::AlphaN, ParserStackSymbol::AlphaU),
+                                                .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second),
 
                                             ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::Null)
-                                                .SetStack(ParserStackSymbol::AlphaU, ParserStackSymbol::AlphaL),
+                                                .SetStack(ParserStackSymbol::Second, ParserStackSymbol::Third),
                                                 
                                             ParserStateTransition(ParserInputSymbol::AlphaL, ParserStateType::PostValue)
-                                                .SetStack(ParserStackSymbol::AlphaL, ParserStackSymbol::None)
+                                                .SetStack(ParserStackSymbol::Third, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Null)
 
                                         }, { ParserInputSymbol::None, ParserStateType::Error }));

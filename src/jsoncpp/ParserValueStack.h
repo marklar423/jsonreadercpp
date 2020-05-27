@@ -26,12 +26,18 @@ namespace jsoncpp
             std::stringstream property_name_;
             std::stringstream scalar_value_;  
 
-            static const int kMaxEscapeChars = 4; //usually 1, but for unicode can be 4
+            //JSON allows up to 4 digits in the Unicode code point,
+            static const int kMaxUnicodeDigits = 4;
             
-            char escape_chars[kMaxEscapeChars];
-            int escape_char_index = 0;
+            //collected unicode digits, in the order it appears in the JSON string (big endian)
+            char unicode_digits_[kMaxUnicodeDigits];
+            int unicode_digit_index_ = 0;
+            ParserCharDestination unicode_destination_;
+
+            char ProcessEscapeCharInput(char input_char, ParserCharDestination destination, ParserStateType current_state_type);
 
             char TranslateEscapeChar(char escaped);
+            std::string TranslatUnicodeCodePoint();
     };
 }
 

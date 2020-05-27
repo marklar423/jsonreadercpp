@@ -31,6 +31,8 @@ namespace jsoncpp::states
             CreateValueStringState(),
             CreatePropertyStringState(),
             CreateEscapeCharState(), 
+            CreateUnicodeValueState(), 
+            CreateUnicodePropertyState(),
             CreatePostPropertyState(),            
             CreateValueState(),
             CreatePostValueState(),
