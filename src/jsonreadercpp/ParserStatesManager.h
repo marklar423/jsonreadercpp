@@ -26,7 +26,7 @@ namespace jsonreadercpp
 
             ParserStatesManager() : states_(jsonreadercpp::states::CreateStatesMap()) {}
 
-            NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top);
+            NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top) const;
 
         private:
             std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> states_;

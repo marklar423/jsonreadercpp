@@ -5,7 +5,7 @@
 
 namespace jsonreadercpp
 {    
-    ParserStatesManager::NextTransition ParserStatesManager::GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top)
+    ParserStatesManager::NextTransition ParserStatesManager::GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top) const
     {
         //order of operations: None, None -> * | None, X -> * | X, None -> * | X, Y -> *        
         const auto& current_state_iter = states_.find(current_state_type);

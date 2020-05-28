@@ -27,10 +27,9 @@ namespace jsonreadercpp
             bool debug_output_;            
 
             ParserStatesManager states_manager_;
-            ParserValueStack value_stack_;
-            ParserMachineStack machine_stack_;
 
-            ParserStatesManager::NextTransition ProcessState(std::istream& input, ParserStateType current_state_type);
+            ParserStatesManager::NextTransition ProcessState(std::istream& input, ParserStateType current_state_type,
+                                                                ParserValueStack& value_stack, ParserMachineStack& machine_stack);
             
     };
 }
