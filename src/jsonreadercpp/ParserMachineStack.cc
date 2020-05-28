@@ -1,7 +1,7 @@
 
-#include "jsoncpp/ParserMachineStack.h"
+#include "jsonreadercpp/ParserMachineStack.h"
 
-namespace jsoncpp
+namespace jsonreadercpp
 {
     void ParserMachineStack::PopPush(ParserStackSymbol stack_pop, ParserStackSymbol stack_push)
     {

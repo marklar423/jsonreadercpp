@@ -1,4 +1,4 @@
-#include "jsoncpp/JsonDeserializer.h"
+#include "jsonreadercpp/JsonDeserializer.h"
 
 #include <iostream>
 
@@ -6,7 +6,7 @@ using std::string;
 using std::pair;
 using std::optional;
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {
     JsonDeserializer::JsonDeserializer(bool debug_output /*= false*/)
         : states_manager_(), value_stack_(),  machine_stack_(), debug_output_(debug_output)

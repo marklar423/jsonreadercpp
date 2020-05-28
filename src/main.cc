@@ -1,9 +1,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "jsoncpp/JsonDeserializer.h"
+#include "jsonreadercpp/JsonDeserializer.h"
 
-using namespace jsoncpp;
+using namespace jsonreadercpp;
 using std::string;
 using std::cout;
 using std::cin;

@@ -1,11 +1,11 @@
-#ifndef JSONCPP_PARSERMACHINESTACK_H_
-#define JSONCPP_PARSERMACHINESTACK_H_
+#ifndef JSONREADERCPP_PARSERMACHINESTACK_H_
+#define JSONREADERCPP_PARSERMACHINESTACK_H_
 
 #include <stack>
 
-#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
 
-namespace jsoncpp
+namespace jsonreadercpp
 {
     class ParserMachineStack
     {

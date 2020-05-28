@@ -1,13 +1,13 @@
-#ifndef JSONCPP_STATES_START_H
-#define JSONCPP_STATES_START_H
+#ifndef JSONREADERCPP_STATES_START_H
+#define JSONREADERCPP_STATES_START_H
 
 #include <unordered_map>
 #include <memory>
 
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserState.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserState.h"
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {   
     std::unique_ptr<ParserState> CreateStartState();
     std::unique_ptr<ParserState> CreateFinishState();

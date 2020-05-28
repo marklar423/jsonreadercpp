@@ -1,13 +1,13 @@
-#ifndef JSONCPP_STATES_OBJECT_H
-#define JSONCPP_STATES_OBJECT_H
+#ifndef JSONREADERCPP_STATES_OBJECT_H
+#define JSONREADERCPP_STATES_OBJECT_H
 
 #include <unordered_map>
 #include <memory>
 
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserState.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserState.h"
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {       
     std::unique_ptr<ParserState> CreateObjectState();
     std::unique_ptr<ParserState> CreatePostObjectState();

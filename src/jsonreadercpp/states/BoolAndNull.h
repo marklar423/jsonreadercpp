@@ -1,13 +1,13 @@
-#ifndef JSONCPP_STATES_BOOL_AND_NULL_H
-#define JSONCPP_STATES_BOOL_AND_NULL_H
+#ifndef JSONREADERCPP_STATES_BOOL_AND_NULL_H
+#define JSONREADERCPP_STATES_BOOL_AND_NULL_H
 
 #include <unordered_map>
 #include <memory>
 
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserState.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserState.h"
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {   
     std::unique_ptr<ParserState> CreateTrueState();
     std::unique_ptr<ParserState> CreateFalseState();

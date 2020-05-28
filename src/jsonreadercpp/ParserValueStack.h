@@ -1,15 +1,15 @@
-#ifndef JSONCPP_PARSERVALUESTACK_H_
-#define JSONCPP_PARSERVALUESTACK_H_
+#ifndef JSONREADERCPP_PARSERVALUESTACK_H_
+#define JSONREADERCPP_PARSERVALUESTACK_H_
 
 #include <stack>
 #include <string>
 #include <sstream>
 #include <optional>
 
-#include "jsoncpp/JValue.h"
-#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/JValue.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
 
-namespace jsoncpp
+namespace jsonreadercpp
 {
     class ParserValueStack
     {

@@ -1,15 +1,15 @@
-#ifndef JSONCPP_PARSERSTATESMANAGER_H
-#define JSONCPP_PARSERSTATESMANAGER_H
+#ifndef JSONREADERCPP_PARSERSTATESMANAGER_H
+#define JSONREADERCPP_PARSERSTATESMANAGER_H
 
 #include <unordered_map>
 #include <istream>
 #include <memory>
 
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserState.h"
-#include "jsoncpp/states/ParserStateImpls.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserState.h"
+#include "jsonreadercpp/states/ParserStateImpls.h"
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {
     class ParserStatesManager
     {
@@ -24,7 +24,7 @@ namespace jsoncpp
                     : transition(transition), finished_input(finished_input), processed_char(processed_char) {}
             };
 
-            ParserStatesManager() : states_(jsoncpp::states::CreateStatesMap()) {}
+            ParserStatesManager() : states_(jsonreadercpp::states::CreateStatesMap()) {}
 
             NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top);
 

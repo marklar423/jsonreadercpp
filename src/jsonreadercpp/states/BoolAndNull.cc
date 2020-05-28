@@ -1,10 +1,10 @@
 
-#include "jsoncpp/states/BoolAndNull.h"
+#include "jsonreadercpp/states/BoolAndNull.h"
 
 using std::make_unique;
 using std::unique_ptr;
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {  
     unique_ptr<ParserState> CreateTrueState()
     {

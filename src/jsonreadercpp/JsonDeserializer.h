@@ -1,16 +1,16 @@
-#ifndef JSONCPP_JSONDESERIALIZER_H_
-#define JSONCPP_JSONDESERIALIZER_H_
+#ifndef JSONREADERCPP_JSONDESERIALIZER_H_
+#define JSONREADERCPP_JSONDESERIALIZER_H_
 
 #include <optional>
 #include <istream>
 
-#include "jsoncpp/JValue.h"
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserValueStack.h"
-#include "jsoncpp/ParserMachineStack.h"
-#include "jsoncpp/ParserStatesManager.h"
+#include "jsonreadercpp/JValue.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserValueStack.h"
+#include "jsonreadercpp/ParserMachineStack.h"
+#include "jsonreadercpp/ParserStatesManager.h"
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {
 
     class JsonDeserializer 

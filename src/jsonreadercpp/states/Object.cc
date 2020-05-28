@@ -1,9 +1,9 @@
-#include "jsoncpp/states/Object.h"
+#include "jsonreadercpp/states/Object.h"
 
 using std::make_unique;
 using std::unique_ptr;
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {  
     unique_ptr<ParserState> CreateObjectState()
     {

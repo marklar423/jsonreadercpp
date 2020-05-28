@@ -1,4 +1,4 @@
-#include "jsoncpp/ParserValueStack.h"
+#include "jsonreadercpp/ParserValueStack.h"
 
 #include <clocale>
 #include <cstdlib>
@@ -8,7 +8,7 @@ using std::string;
 using std::pair;
 using std::optional;
 
-namespace jsoncpp
+namespace jsonreadercpp
 {
     void ParserValueStack::AccumulateInput(char input_char, ParserCharDestination destination, ParserStateType current_state_type)
     {

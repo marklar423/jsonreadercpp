@@ -1,7 +1,7 @@
-#include "jsoncpp/ParserState.h"
+#include "jsonreadercpp/ParserState.h"
 
 
-namespace jsoncpp
+namespace jsonreadercpp
 {
     
     bool ParserState::HasTransition(ParserInputSymbol input_symbol, ParserStackSymbol stack_symbol) const

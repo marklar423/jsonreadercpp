@@ -1,9 +1,9 @@
-#include "jsoncpp/states/ValueAndArray.h"
+#include "jsonreadercpp/states/ValueAndArray.h"
 
 using std::make_unique;
 using std::unique_ptr;
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {  
     unique_ptr<ParserState> CreateValueState()
     {

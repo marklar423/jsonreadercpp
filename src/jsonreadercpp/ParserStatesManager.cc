@@ -1,9 +1,9 @@
 
 #include <iostream>
 
-#include "jsoncpp/ParserStatesManager.h"
+#include "jsonreadercpp/ParserStatesManager.h"
 
-namespace jsoncpp
+namespace jsonreadercpp
 {    
     ParserStatesManager::NextTransition ParserStatesManager::GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top)
     {
@@ -34,7 +34,7 @@ namespace jsoncpp
                 char c = '\0';
                 if (input >> c)
                 {              
-                    ParserInputSymbol input_symbol = jsoncpp::CharToInputSymbol(c);
+                    ParserInputSymbol input_symbol = jsonreadercpp::CharToInputSymbol(c);
 
                     //X, None -> *
                     if (current_state.HasTransition(input_symbol, ParserStackSymbol::None))

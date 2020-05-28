@@ -1,9 +1,9 @@
-#ifndef JSONCPP_PARSERSTATESSYMBOLS_H_
-#define JSONCPP_PARSERSTATESSYMBOLS_H_
+#ifndef JSONREADERCPP_PARSERSTATESSYMBOLS_H_
+#define JSONREADERCPP_PARSERSTATESSYMBOLS_H_
 
 #include <string>
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {
     enum class ParserStateType 
     {

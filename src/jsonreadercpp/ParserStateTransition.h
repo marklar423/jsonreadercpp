@@ -1,12 +1,12 @@
-#ifndef JSONCPP_PARSERSTATETRANSITION_H
-#define JSONCPP_PARSERSTATETRANSITION_H
+#ifndef JSONREADERCPP_PARSERSTATETRANSITION_H
+#define JSONREADERCPP_PARSERSTATETRANSITION_H
 
 #include <optional>
 
-#include "jsoncpp/JValue.h"
-#include "jsoncpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/JValue.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {   
     struct ParserStateTransition
     {

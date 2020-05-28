@@ -1,23 +1,23 @@
-#include "jsoncpp/states/ParserStateImpls.h"
+#include "jsonreadercpp/states/ParserStateImpls.h"
 
 #include <vector>
 #include <array>
 
-#include "jsoncpp/ParserStateTransition.h"
+#include "jsonreadercpp/ParserStateTransition.h"
 
-#include "jsoncpp/states/BoolAndNull.h"
-#include "jsoncpp/states/Number.h"
-#include "jsoncpp/states/Object.h"
-#include "jsoncpp/states/Start.h"
-#include "jsoncpp/states/String.h"
-#include "jsoncpp/states/ValueAndArray.h"
+#include "jsonreadercpp/states/BoolAndNull.h"
+#include "jsonreadercpp/states/Number.h"
+#include "jsonreadercpp/states/Object.h"
+#include "jsonreadercpp/states/Start.h"
+#include "jsonreadercpp/states/String.h"
+#include "jsonreadercpp/states/ValueAndArray.h"
 
 using std::unique_ptr;
 using std::vector;
 using std::unordered_map;
 using std::array;
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {   
 
     unordered_map<ParserStateType, unique_ptr<ParserState>> CreateStatesMap()

@@ -1,5 +1,5 @@
-#ifndef JSONCPP_JVALUE_H_
-#define JSONCPP_JVALUE_H_
+#ifndef JSONREADERCPP_JVALUE_H_
+#define JSONREADERCPP_JVALUE_H_
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
 #include <variant>
 #include <optional>
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {
 
     enum class JValueType 

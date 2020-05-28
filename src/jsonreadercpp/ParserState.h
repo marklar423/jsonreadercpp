@@ -1,13 +1,13 @@
-#ifndef JSONCPP_PARSERSTATE_H
-#define JSONCPP_PARSERSTATE_H
+#ifndef JSONREADERCPP_PARSERSTATE_H
+#define JSONREADERCPP_PARSERSTATE_H
 
 #include <unordered_map>
 #include <initializer_list>
 
-#include "jsoncpp/ParserStatesSymbols.h"
-#include "jsoncpp/ParserStateTransition.h"
+#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/ParserStateTransition.h"
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 { 
     class ParserState
     {

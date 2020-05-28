@@ -1,8 +1,8 @@
-#include "jsoncpp/JValue.h"
+#include "jsonreadercpp/JValue.h"
 
 using std::string;
 
-namespace jsoncpp 
+namespace jsonreadercpp 
 {    
     JValue::JValue(JValueType value_type, 
                     std::variant<std::string, double, bool> value) 

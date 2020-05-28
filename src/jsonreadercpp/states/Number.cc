@@ -1,9 +1,9 @@
-#include "jsoncpp/states/Number.h"
+#include "jsonreadercpp/states/Number.h"
 
 using std::make_unique;
 using std::unique_ptr;
 
-namespace jsoncpp::states
+namespace jsonreadercpp::states
 {    
     unique_ptr<ParserState> CreateIntState()
     {
