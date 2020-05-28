@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <memory>
 
-#include "jsonreadercpp/ParserStatesSymbols.h"
-#include "jsonreadercpp/ParserState.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserState.h"
 
 namespace jsonreadercpp::states
 {   

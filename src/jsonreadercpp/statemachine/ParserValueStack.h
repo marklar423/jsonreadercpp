@@ -1,5 +1,5 @@
-#ifndef JSONREADERCPP_PARSERVALUESTACK_H_
-#define JSONREADERCPP_PARSERVALUESTACK_H_
+#ifndef JSONREADERCPP_STATEMACHINE_PARSERVALUESTACK_H_
+#define JSONREADERCPP_STATEMACHINE_PARSERVALUESTACK_H_
 
 #include <stack>
 #include <string>
@@ -7,7 +7,7 @@
 #include <optional>
 
 #include "jsonreadercpp/JValue.h"
-#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
 
 namespace jsonreadercpp
 {

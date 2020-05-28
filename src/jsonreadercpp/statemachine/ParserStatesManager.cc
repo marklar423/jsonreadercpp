@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "jsonreadercpp/ParserStatesManager.h"
+#include "jsonreadercpp/statemachine/ParserStatesManager.h"
 
 namespace jsonreadercpp
 {    

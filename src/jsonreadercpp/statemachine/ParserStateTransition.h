@@ -1,10 +1,10 @@
-#ifndef JSONREADERCPP_PARSERSTATETRANSITION_H
-#define JSONREADERCPP_PARSERSTATETRANSITION_H
+#ifndef JSONREADERCPP_STATEMACHINE_PARSERSTATETRANSITION_H
+#define JSONREADERCPP_STATEMACHINE_PARSERSTATETRANSITION_H
 
 #include <optional>
 
 #include "jsonreadercpp/JValue.h"
-#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
 
 namespace jsonreadercpp 
 {   

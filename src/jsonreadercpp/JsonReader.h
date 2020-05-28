@@ -5,10 +5,10 @@
 #include <iostream>
 
 #include "jsonreadercpp/JValue.h"
-#include "jsonreadercpp/ParserStatesSymbols.h"
-#include "jsonreadercpp/ParserValueStack.h"
-#include "jsonreadercpp/ParserMachineStack.h"
-#include "jsonreadercpp/ParserStatesManager.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserStatesManager.h"
+#include "jsonreadercpp/statemachine/ParserValueStack.h"
+#include "jsonreadercpp/statemachine/ParserMachineStack.h"
 
 namespace jsonreadercpp 
 {

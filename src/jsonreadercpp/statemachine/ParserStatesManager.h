@@ -1,12 +1,12 @@
-#ifndef JSONREADERCPP_PARSERSTATESMANAGER_H
-#define JSONREADERCPP_PARSERSTATESMANAGER_H
+#ifndef JSONREADERCPP_STATEMACHINE_PARSERSTATESMANAGER_H
+#define JSONREADERCPP_STATEMACHINE_PARSERSTATESMANAGER_H
 
 #include <unordered_map>
 #include <istream>
 #include <memory>
 
-#include "jsonreadercpp/ParserStatesSymbols.h"
-#include "jsonreadercpp/ParserState.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserState.h"
 #include "jsonreadercpp/states/ParserStateImpls.h"
 
 namespace jsonreadercpp 

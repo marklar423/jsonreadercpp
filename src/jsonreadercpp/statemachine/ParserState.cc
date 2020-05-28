@@ -1,4 +1,4 @@
-#include "jsonreadercpp/ParserState.h"
+#include "jsonreadercpp/statemachine/ParserState.h"
 
 
 namespace jsonreadercpp

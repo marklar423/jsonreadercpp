@@ -1,5 +1,5 @@
 
-#include "jsonreadercpp/ParserMachineStack.h"
+#include "jsonreadercpp/statemachine/ParserMachineStack.h"
 
 namespace jsonreadercpp
 {

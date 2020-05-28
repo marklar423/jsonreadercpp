@@ -3,7 +3,7 @@
 #include <vector>
 #include <array>
 
-#include "jsonreadercpp/ParserStateTransition.h"
+#include "jsonreadercpp/statemachine/ParserStateTransition.h"
 
 #include "jsonreadercpp/states/BoolAndNull.h"
 #include "jsonreadercpp/states/Number.h"

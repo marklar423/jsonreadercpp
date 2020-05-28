@@ -1,9 +1,9 @@
-#ifndef JSONREADERCPP_PARSERMACHINESTACK_H_
-#define JSONREADERCPP_PARSERMACHINESTACK_H_
+#ifndef JSONREADERCPP_STATEMACHINE_PARSERMACHINESTACK_H_
+#define JSONREADERCPP_STATEMACHINE_PARSERMACHINESTACK_H_
 
 #include <stack>
 
-#include "jsonreadercpp/ParserStatesSymbols.h"
+#include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
 
 namespace jsonreadercpp
 {
