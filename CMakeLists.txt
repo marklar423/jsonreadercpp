@@ -12,4 +12,5 @@ add_executable(jsoncpp-cli ${SOURCES})
 set_target_properties(jsoncpp-cli PROPERTIES 
                         CXX_STANDARD 17
                         CXX_EXTENSIONS OFF)
-set(CMAKE_BUILD_TYPE Debug)
+
+#set(CMAKE_BUILD_TYPE Debug)
