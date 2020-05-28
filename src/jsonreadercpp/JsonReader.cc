@@ -1,17 +1,17 @@
 #include "jsonreadercpp/JsonReader.h"
 
-#include <iostream>
-
 using std::string;
 using std::pair;
 using std::optional;
 
 namespace jsonreadercpp 
 {
-    JsonReader::JsonReader(bool debug_output /*= false*/)
-        : states_manager_(), value_stack_(),  machine_stack_(), debug_output_(debug_output)
-    {
-        
+    JsonReader::JsonReader(std::ostream& error_output_stream /*= std::cerr*/, 
+                        std::ostream& debug_output_stream /*= std::cout*/, bool debug_output /*= false*/)
+        : states_manager_(), value_stack_(),  machine_stack_(), 
+           error_output_stream_(error_output_stream), 
+           debug_output_stream_(debug_output_stream), debug_output_(debug_output)
+    {        
     } 
 
     optional<JValue> JsonReader::ParseJsonString(std::istream& input) 
@@ -26,11 +26,11 @@ namespace jsonreadercpp
         while (!finished_input) 
         {   
             if (debug_output_)
-                std::cout << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(current_state_type) << "\n";
+                debug_output_stream_ << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(current_state_type) << "\n";
 
             if (current_state_type == ParserStateType::Error)
             {
-                std::cerr << "Error parsing! Position:" << char_num << "\n";
+                error_output_stream_ << "Error parsing! Position:" << char_num << "\n";
                 exit(1);
             }
             else
@@ -49,7 +49,7 @@ namespace jsonreadercpp
 
         if (value_stack_.GetSize() > 1)
         {
-            std::cerr << "Error parsing! Unexpected end of input, JSON isn't complete\n";
+            error_output_stream_ << "Error parsing! Unexpected end of input, JSON isn't complete\n";
             exit(1);
         }
         else

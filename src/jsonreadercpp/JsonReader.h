@@ -2,7 +2,7 @@
 #define JSONREADERCPP_JSONDESERIALIZER_H_
 
 #include <optional>
-#include <istream>
+#include <iostream>
 
 #include "jsonreadercpp/JValue.h"
 #include "jsonreadercpp/ParserStatesSymbols.h"
@@ -16,12 +16,16 @@ namespace jsonreadercpp
     class JsonReader 
     {
         public:
-            JsonReader(bool debug_output = false);
+            JsonReader(std::ostream& error_output_stream = std::cerr, 
+                        std::ostream& debug_output_stream = std::cout, bool debug_output = false);
 
             std::optional<JValue> ParseJsonString(std::istream& input);
 
         private:
+            std::ostream& error_output_stream_;
+            std::ostream& debug_output_stream_;
             bool debug_output_;            
+
             ParserStatesManager states_manager_;
             ParserValueStack value_stack_;
             ParserMachineStack machine_stack_;
