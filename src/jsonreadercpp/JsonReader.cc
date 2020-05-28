@@ -17,21 +17,27 @@ namespace jsonreadercpp
     optional<JValue> JsonReader::ParseJsonString(std::istream& input) 
     {        
         auto current_state_type = ParserStateType::Start;
-        bool finished_input = false;
-        int char_num = 0;
+        
+        bool finished_input = false, has_error = false;
         char processed_char = '\0';
+
+        int line_num = 1;
+        int char_num = 0;
+        int line_char_start = 0;
         
         input >> std::noskipws;
 
-        while (!finished_input) 
+        while (!finished_input && !has_error) 
         {   
             if (debug_output_)
                 debug_output_stream_ << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(current_state_type) << "\n";
 
             if (current_state_type == ParserStateType::Error)
             {
-                error_output_stream_ << "Error parsing! Position:" << char_num << "\n";
-                exit(1);
+                error_output_stream_ << "Error: Unexpected \"" << processed_char << "\""
+                                     << " at Line:" << line_num << ", Line Position:" << (char_num - line_char_start) 
+                                     << ", Global Position:" << char_num << "\n";                
+                has_error = true;
             }
             else
             {        
@@ -42,19 +48,26 @@ namespace jsonreadercpp
                 finished_input = next_transition_container.finished_input;
 
                 if (processed_char != '\0') char_num++;
+                if (processed_char == '\n') 
+                {
+                    line_num++;
+                    line_char_start = char_num;
+                }
             }
         }
 
         optional<JValue> result;
 
-        if (value_stack_.GetSize() > 1)
+        if (!has_error)
         {
-            error_output_stream_ << "Error parsing! Unexpected end of input, JSON isn't complete\n";
-            exit(1);
-        }
-        else
-        {
-            result = std::move(value_stack_.RemoveRootValue());
+            if (value_stack_.GetSize() > 1)
+            {
+                error_output_stream_ << "Error: Unexpected end of input, JSON isn't complete\n";            
+            }
+            else
+            {
+                result = std::move(value_stack_.RemoveRootValue());
+            }
         }
 
         return result;
