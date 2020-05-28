@@ -13,10 +13,10 @@
 namespace jsonreadercpp 
 {
 
-    class JsonDeserializer 
+    class JsonReader 
     {
         public:
-            JsonDeserializer(bool debug_output = false);
+            JsonReader(bool debug_output = false);
 
             std::optional<JValue> ParseJsonString(std::istream& input);
 

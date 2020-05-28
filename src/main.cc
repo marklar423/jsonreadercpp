@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "jsonreadercpp/JsonDeserializer.h"
+#include "jsonreadercpp/JsonReader.h"
 
 using namespace jsonreadercpp;
 using std::string;
@@ -13,7 +13,7 @@ void PrintJsonTree(const JValue& root, string prefix);
 
 int main(int argc, char *argv[])
 {
-	JsonDeserializer parser;
+	JsonReader parser;
 	auto parsed_json = parser.ParseJsonString(cin);
 
 	if (parsed_json.has_value())

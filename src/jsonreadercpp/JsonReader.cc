@@ -1,4 +1,4 @@
-#include "jsonreadercpp/JsonDeserializer.h"
+#include "jsonreadercpp/JsonReader.h"
 
 #include <iostream>
 
@@ -8,13 +8,13 @@ using std::optional;
 
 namespace jsonreadercpp 
 {
-    JsonDeserializer::JsonDeserializer(bool debug_output /*= false*/)
+    JsonReader::JsonReader(bool debug_output /*= false*/)
         : states_manager_(), value_stack_(),  machine_stack_(), debug_output_(debug_output)
     {
         
     } 
 
-    optional<JValue> JsonDeserializer::ParseJsonString(std::istream& input) 
+    optional<JValue> JsonReader::ParseJsonString(std::istream& input) 
     {        
         auto current_state_type = ParserStateType::Start;
         bool finished_input = false;
@@ -60,7 +60,7 @@ namespace jsonreadercpp
         return result;
     }
 
-    ParserStatesManager::NextTransition JsonDeserializer::ProcessState(std::istream& input, ParserStateType current_state_type)    
+    ParserStatesManager::NextTransition JsonReader::ProcessState(std::istream& input, ParserStateType current_state_type)    
     {        
         //get next state
         auto stack_symbol = (this->machine_stack_.GetSize() > 0) ? 
