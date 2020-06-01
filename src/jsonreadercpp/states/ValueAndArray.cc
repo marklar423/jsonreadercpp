@@ -5,9 +5,9 @@ using std::unique_ptr;
 
 namespace jsonreadercpp::states
 {  
-    unique_ptr<ParserState> CreateValueState()
+    ParserState CreateValueState()
     {
-         return unique_ptr<ParserState>(new ParserState(ParserStateType::Value, 
+         return ParserState(ParserStateType::Value, 
                                         {                                            
                                             { ParserInputSymbol::Whitespace, ParserStateType::Value },                                            
                                             { ParserInputSymbol::DoubleQuote, ParserStateType::ValueString },      
@@ -41,12 +41,12 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::None, ParserStackSymbol::Object)
                                                 .SetValueAction(ParserValueAction::Push, JValueType::Object)
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
     
-    unique_ptr<ParserState> CreatePostValueState()
+    ParserState CreatePostValueState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostValue, 
+        return ParserState(ParserStateType::PostValue, 
                                         {
                                             { ParserInputSymbol::Whitespace, ParserStateType::PostValue },     
                                                 
@@ -64,7 +64,7 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::Pop, {})
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
     
 

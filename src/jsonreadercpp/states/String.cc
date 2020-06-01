@@ -6,9 +6,9 @@ using std::unique_ptr;
 namespace jsonreadercpp::states
 {  
     
-    unique_ptr<ParserState> CreateValueStringState()
+    ParserState CreateValueStringState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::ValueString, 
+        return ParserState(ParserStateType::ValueString, 
                                         {
                                             ParserStateTransition(ParserInputSymbol::DoubleQuote, ParserStateType::PostValue)                                                
                                                                     .SetValueAction(ParserValueAction::PushPop, JValueType::String),
@@ -17,12 +17,12 @@ namespace jsonreadercpp::states
                                                                     .SetStack(ParserStackSymbol::None, ParserStackSymbol::ValueString), 
                                         },
                                          ParserStateTransition(ParserInputSymbol::None, ParserStateType::ValueString)
-                                                                .SetCharDestination(ParserCharDestination::Value) ));
+                                                                .SetCharDestination(ParserCharDestination::Value) );
     }
     
-    unique_ptr<ParserState> CreatePropertyStringState()
+    ParserState CreatePropertyStringState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::PropertyString, 
+        return ParserState(ParserStateType::PropertyString, 
                                         {
                                             { ParserInputSymbol::DoubleQuote, ParserStateType::PostProperty },
                                                 
@@ -30,7 +30,7 @@ namespace jsonreadercpp::states
                                                                     .SetStack(ParserStackSymbol::None, ParserStackSymbol::PropertyString), 
                                         },
                                         ParserStateTransition(ParserInputSymbol::None, ParserStateType::PropertyString)
-                                                                .SetCharDestination(ParserCharDestination::Name) ));
+                                                                .SetCharDestination(ParserCharDestination::Name) );
     }
 
     void PopulateEscapeCharStates(ParserState& state, ParserStateType next_state, ParserStackSymbol stack_pop, ParserCharDestination char_dest)
@@ -47,9 +47,9 @@ namespace jsonreadercpp::states
         }
     }
 
-    unique_ptr<ParserState> CreateEscapeCharState()
+    ParserState CreateEscapeCharState()
     {
-        auto state_ptr = unique_ptr<ParserState>(new ParserState(ParserStateType::EscapeChar, 
+        ParserState state(ParserStateType::EscapeChar, 
                                         {
                                             ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::UnicodeValue)
                                                 .SetStack(ParserStackSymbol::ValueString, ParserStackSymbol::First)
@@ -61,12 +61,12 @@ namespace jsonreadercpp::states
 
                                             //more states populated with PopulateEscapeCharStates()
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
 
-        PopulateEscapeCharStates(*state_ptr, ParserStateType::ValueString, ParserStackSymbol::ValueString, ParserCharDestination::Value);
-        PopulateEscapeCharStates(*state_ptr, ParserStateType::PropertyString, ParserStackSymbol::PropertyString, ParserCharDestination::Name);
+        PopulateEscapeCharStates(state, ParserStateType::ValueString, ParserStackSymbol::ValueString, ParserCharDestination::Value);
+        PopulateEscapeCharStates(state, ParserStateType::PropertyString, ParserStackSymbol::PropertyString, ParserCharDestination::Name);
 
-        return state_ptr;
+        return state;
     }
    
     void PopulateUnicodeStates(ParserState& state, ParserStateType next_state, ParserStackSymbol stack_pop, ParserStackSymbol stack_push, ParserCharDestination char_dest)
@@ -82,33 +82,33 @@ namespace jsonreadercpp::states
         }
     }
 
-    unique_ptr<ParserState> CreateUnicodeValueState()
+    ParserState CreateUnicodeValueState()
     {
-        auto state_ptr = unique_ptr<ParserState>(new ParserState(ParserStateType::UnicodeValue, 
+        ParserState state(ParserStateType::UnicodeValue, 
                                         {
                                             //states populated with PopulateUnicodeStates()
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));            
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });            
 
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeValue, ParserStackSymbol::First, ParserStackSymbol::Second, ParserCharDestination::Value);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeValue, ParserStackSymbol::Second, ParserStackSymbol::Third, ParserCharDestination::Value);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeValue, ParserStackSymbol::Third, ParserStackSymbol::Fourth, ParserCharDestination::Value);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::ValueString, ParserStackSymbol::Fourth, ParserStackSymbol::None, ParserCharDestination::Value);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeValue, ParserStackSymbol::First, ParserStackSymbol::Second, ParserCharDestination::Value);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeValue, ParserStackSymbol::Second, ParserStackSymbol::Third, ParserCharDestination::Value);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeValue, ParserStackSymbol::Third, ParserStackSymbol::Fourth, ParserCharDestination::Value);
+        PopulateUnicodeStates(state, ParserStateType::ValueString, ParserStackSymbol::Fourth, ParserStackSymbol::None, ParserCharDestination::Value);
 
-        return state_ptr;
+        return state;
     }
 
-    unique_ptr<ParserState> CreateUnicodePropertyState()
+    ParserState CreateUnicodePropertyState()
     {
-        auto state_ptr = unique_ptr<ParserState>(new ParserState(ParserStateType::UnicodeProperty, 
+        ParserState state(ParserStateType::UnicodeProperty, 
                                         {
                                             //states populated with PopulateUnicodeStates()
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));            
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });            
 
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeProperty, ParserStackSymbol::First, ParserStackSymbol::Second, ParserCharDestination::Name);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeProperty, ParserStackSymbol::Second, ParserStackSymbol::Third, ParserCharDestination::Name);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::UnicodeProperty, ParserStackSymbol::Third, ParserStackSymbol::Fourth, ParserCharDestination::Name);
-        PopulateUnicodeStates(*state_ptr, ParserStateType::PropertyString, ParserStackSymbol::Fourth, ParserStackSymbol::None, ParserCharDestination::Name);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeProperty, ParserStackSymbol::First, ParserStackSymbol::Second, ParserCharDestination::Name);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeProperty, ParserStackSymbol::Second, ParserStackSymbol::Third, ParserCharDestination::Name);
+        PopulateUnicodeStates(state, ParserStateType::UnicodeProperty, ParserStackSymbol::Third, ParserStackSymbol::Fourth, ParserCharDestination::Name);
+        PopulateUnicodeStates(state, ParserStateType::PropertyString, ParserStackSymbol::Fourth, ParserStackSymbol::None, ParserCharDestination::Name);
 
-        return state_ptr;
+        return state;
     }
 }

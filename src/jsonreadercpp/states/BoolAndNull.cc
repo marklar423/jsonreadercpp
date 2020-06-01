@@ -6,9 +6,9 @@ using std::unique_ptr;
 
 namespace jsonreadercpp::states
 {  
-    unique_ptr<ParserState> CreateTrueState()
+    ParserState CreateTrueState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::True, 
+        return ParserState(ParserStateType::True, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaR, ParserStateType::True)
                                                 .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second)
@@ -23,12 +23,12 @@ namespace jsonreadercpp::states
                                                 .SetCharDestination(ParserCharDestination::Value) 
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
     
-    unique_ptr<ParserState> CreateFalseState()
+    ParserState CreateFalseState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::False, 
+        return ParserState(ParserStateType::False, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaA, ParserStateType::False)
                                                 .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second)
@@ -47,12 +47,12 @@ namespace jsonreadercpp::states
                                                 .SetCharDestination(ParserCharDestination::Value) 
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Boolean)
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
   
-    unique_ptr<ParserState> CreateNullState()
+    ParserState CreateNullState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::Null, 
+        return ParserState(ParserStateType::Null, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::AlphaU, ParserStateType::Null)
                                                 .SetStack(ParserStackSymbol::First, ParserStackSymbol::Second),
@@ -64,7 +64,7 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::Third, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Null)
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }    
     
 

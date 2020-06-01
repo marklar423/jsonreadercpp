@@ -5,9 +5,9 @@ using std::unique_ptr;
 
 namespace jsonreadercpp::states
 {    
-    unique_ptr<ParserState> CreateIntState()
+    ParserState CreateIntState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::Int, 
+        return ParserState(ParserStateType::Int, 
                                         {   
                                             ParserStateTransition( ParserInputSymbol::Number, ParserStateType::Int)
                                                 .SetCharDestination(ParserCharDestination::Value),
@@ -34,12 +34,12 @@ namespace jsonreadercpp::states
                                             ParserStateTransition( ParserInputSymbol::Whitespace, ParserStateType::PostValue)
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
     
-    unique_ptr<ParserState> CreatePostIntParentState()
+    ParserState CreatePostIntParentState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostIntParent, 
+        return ParserState(ParserStateType::PostIntParent, 
                                         {   
                                             ParserStateTransition( ParserInputSymbol::None, ParserStateType::PostValue)
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::None)
@@ -49,12 +49,12 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::Object, ParserStackSymbol::None)
                                                 .SetValueAction(ParserValueAction::Pop, {})
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
 
-    unique_ptr<ParserState> CreateDoubleState()
+    ParserState CreateDoubleState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::Double, 
+        return ParserState(ParserStateType::Double, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::Number, ParserStateType::Double)
                                                 .SetCharDestination(ParserCharDestination::Value),
@@ -84,12 +84,12 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
                                             
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
 
-    unique_ptr<ParserState> CreateExponentSignState()
+    ParserState CreateExponentSignState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::ExponentSign, 
+        return ParserState(ParserStateType::ExponentSign, 
                                         { 
                                             ParserStateTransition(ParserInputSymbol::Plus, ParserStateType::ExponentDigits)
                                                 .SetCharDestination(ParserCharDestination::Value),
@@ -97,12 +97,12 @@ namespace jsonreadercpp::states
                                             ParserStateTransition(ParserInputSymbol::Dash, ParserStateType::ExponentDigits)
                                                 .SetCharDestination(ParserCharDestination::Value) 
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
 
-    unique_ptr<ParserState> CreateExponentDigitsState()
+    ParserState CreateExponentDigitsState()
     {  
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::ExponentDigits, 
+        return ParserState(ParserStateType::ExponentDigits, 
                                         {       
                                             ParserStateTransition(ParserInputSymbol::Number, ParserStateType::ExponentDigits)
                                                 .SetCharDestination(ParserCharDestination::Value),
@@ -126,6 +126,6 @@ namespace jsonreadercpp::states
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array)
                                                 .SetValueAction(ParserValueAction::PushPop, JValueType::Number),
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
 }

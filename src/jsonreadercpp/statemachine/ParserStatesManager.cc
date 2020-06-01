@@ -17,7 +17,7 @@ namespace jsonreadercpp
         }
         else
         {        
-            const auto& current_state = *current_state_iter->second;
+            const auto& current_state = current_state_iter->second;
 
             if (current_state.HasTransition(ParserInputSymbol::None, ParserStackSymbol::None))
             {

@@ -9,11 +9,11 @@
 
 namespace jsonreadercpp::states
 {       
-    std::unique_ptr<ParserState> CreateIntState();
-    std::unique_ptr<ParserState> CreatePostIntParentState();
-    std::unique_ptr<ParserState> CreateDoubleState();
-    std::unique_ptr<ParserState> CreateExponentSignState();    
-    std::unique_ptr<ParserState> CreateExponentDigitsState();
+    ParserState CreateIntState();
+    ParserState CreatePostIntParentState();
+    ParserState CreateDoubleState();
+    ParserState CreateExponentSignState();    
+    ParserState CreateExponentDigitsState();
 }
 
 

@@ -29,7 +29,7 @@ namespace jsonreadercpp
             NextTransition GetNextTransition(ParserStateType current_state_type, std::istream& input, ParserStackSymbol stack_top) const;
 
         private:
-            std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> states_;
+            std::unordered_map<ParserStateType, ParserState> states_;
 
     };
 }

@@ -9,9 +9,9 @@
 
 namespace jsonreadercpp::states
 {   
-    std::unique_ptr<ParserState> CreateTrueState();
-    std::unique_ptr<ParserState> CreateFalseState();
-    std::unique_ptr<ParserState> CreateNullState();
+    ParserState CreateTrueState();
+    ParserState CreateFalseState();
+    ParserState CreateNullState();
 }
 
 

@@ -20,9 +20,9 @@ using std::array;
 namespace jsonreadercpp::states
 {   
 
-    unordered_map<ParserStateType, unique_ptr<ParserState>> CreateStatesMap()
+    unordered_map<ParserStateType, ParserState> CreateStatesMap()
     {
-        unique_ptr<ParserState> states[] {
+        ParserState states[] {
             CreateStartState(),
             CreateFinishState(),
             CreateRootObjectState(),
@@ -46,11 +46,11 @@ namespace jsonreadercpp::states
             CreateNullState()
         };
 
-        unordered_map<ParserStateType, unique_ptr<ParserState>> states_map;
+        unordered_map<ParserStateType, ParserState> states_map;
 
         for (auto& state : states)
         {
-            auto state_type = state->GetStateType();
+            auto state_type = state.GetStateType();
             states_map.emplace(state_type, std::move(state));
         }
 

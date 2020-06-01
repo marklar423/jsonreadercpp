@@ -9,7 +9,7 @@
 
 namespace jsonreadercpp::states
 {
-    std::unordered_map<ParserStateType, std::unique_ptr<ParserState>> CreateStatesMap();
+    std::unordered_map<ParserStateType, ParserState> CreateStatesMap();
 }
 
 #endif

@@ -5,9 +5,9 @@ using std::unique_ptr;
 
 namespace jsonreadercpp::states
 {  
-    unique_ptr<ParserState> CreateObjectState()
+    ParserState CreateObjectState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::Object, 
+        return ParserState(ParserStateType::Object, 
                                         {
                                             { ParserInputSymbol::Whitespace, ParserStateType::Object },
 
@@ -17,12 +17,12 @@ namespace jsonreadercpp::states
                                                 
                                             { ParserInputSymbol::DoubleQuote, ParserStateType::PropertyString }
                                         },
-                                        { ParserInputSymbol::None, ParserStateType::Error } ));
+                                        { ParserInputSymbol::None, ParserStateType::Error } );
     }
     
-    unique_ptr<ParserState> CreatePostObjectState()
+    ParserState CreatePostObjectState()
     {
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostObject, 
+        return ParserState(ParserStateType::PostObject, 
                                         {
                                             ParserStateTransition(ParserInputSymbol::None, ParserStateType::Finish)
                                                 .SetStack(ParserStackSymbol::Start, ParserStackSymbol::None ),
@@ -32,18 +32,18 @@ namespace jsonreadercpp::states
 
                                             ParserStateTransition(ParserInputSymbol::None, ParserStateType::PostValue)
                                                 .SetStack(ParserStackSymbol::Array, ParserStackSymbol::Array )
-                                        }));
+                                        });
     }
     
 
 
-    unique_ptr<ParserState> CreatePostPropertyState()
+    ParserState CreatePostPropertyState()
     {        
-        return unique_ptr<ParserState>(new ParserState(ParserStateType::PostProperty, 
+        return ParserState(ParserStateType::PostProperty, 
                                         {
                                             { ParserInputSymbol::Whitespace, ParserStateType::PostProperty },    
                                             { ParserInputSymbol::Colon, ParserStateType::Value },
 
-                                        }, { ParserInputSymbol::None, ParserStateType::Error }));
+                                        }, { ParserInputSymbol::None, ParserStateType::Error });
     }
 }
