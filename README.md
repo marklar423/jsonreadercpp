@@ -27,4 +27,21 @@ int main(int argc, char *argv[])
 
 `JValue` represents a node in the JSON tree. You can inspect the type with `GetValueType()`, loop through children with `GetChildren()`, or get specific children by index or name with the `[]` operator. For scalar values, `JValue` also has `GetStringValue()`, `GetNumberValue()`, and `GetBooleanValue()`- these all try to convert the raw value, but return a `std::optional` in case it cannot be converted.
 
+# PDA States
+## Start (docs/JSON_Start.svg)
+![Start](docs/JSON_Start.svg)
 
+## Object (docs/JSON_Object.svg
+![Object](docs/JSON_Object.svg)
+
+## Value and Array (docs/JSON_Value_and_Array.svg) 
+![Value and Array](docs/JSON_Value_and_Array.svg) 
+
+## Bool and Null (docs/JSON_Bool_and_Null.svg)
+![Bool and Null](docs/JSON_Bool_and_Null.svg)
+
+## String (docs/JSON_String.svg)
+![String](docs/JSON_String.svg)
+
+## Number (docs/JSON_Number.svg)
+![Number](docs/JSON_Number.svg)
