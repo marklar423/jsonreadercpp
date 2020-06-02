@@ -9,15 +9,15 @@ using std::cout;
 using std::cin;
 using std::istringstream;
 
-void PrintJsonTree(const JValue& root, string prefix);
+void PrintJsonTree(const JValue& root, string prefix = "");
 
 int main(int argc, char *argv[])
 {
 	JsonReader parser;
-	auto parsed_json = parser.ParseJsonString(cin);
+	std::optional<JValue> parsed_json = parser.ParseJsonString(cin);
 
 	if (parsed_json.has_value())
-		PrintJsonTree(parsed_json.value(), "");
+		PrintJsonTree(parsed_json.value());
 	else
 		cout << "No root object in JSON\n";
 	
