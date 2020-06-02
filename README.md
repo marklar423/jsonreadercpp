@@ -33,10 +33,11 @@ This project uses a normal pushdown automaton, with input language, states, stac
 To make things easier, it also has a "value stack" where JSON values are pushed (and popped) to easily track the JSON tree, and a "destination" which is where each processed char should be saved to - property name, value, or none.
 
 The format for each transition in the diagram is: 
-[input]
-[stack pop]->[stack push]
-[destination]
-PUSH [value type] | POP | PUSHPOP [value type]
+
+- [input]
+- [stack pop]->[stack push]
+- [destination]
+- PUSH [value type] | POP | PUSHPOP [value type]
 
 The above can use 'e' for empty (as a stand-in for Epsilon)
 
