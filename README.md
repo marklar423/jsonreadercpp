@@ -28,10 +28,23 @@ int main(int argc, char *argv[])
 `JValue` represents a node in the JSON tree. You can inspect the type with `GetValueType()`, loop through children with `GetChildren()`, or get specific children by index or name with the `[]` operator. For scalar values, `JValue` also has `GetStringValue()`, `GetNumberValue()`, and `GetBooleanValue()`- these all try to convert the raw value, but return a `std::optional` in case it cannot be converted.
 
 # PDA States
+This project uses a normal pushdown automaton, with input language, states, stack, etc. 
+
+To make things easier, it also has a "value stack" where JSON values are pushed (and popped) to easily track the JSON tree, and a "destination" which is where each processed char should be saved to - property name, value, or none.
+
+The format for each transition in the diagram is: 
+[input]
+[stack pop]->[stack push]
+[destination]
+PUSH [value type] | POP | PUSHPOP [value type]
+
+The above can use 'e' for empty (as a stand-in for Epsilon)
+
+
 ## Start (docs/JSON_Start.svg)
 ![Start](docs/JSON_Start.svg)
 
-## Object (docs/JSON_Object.svg
+## Object (docs/JSON_Object.svg)
 ![Object](docs/JSON_Object.svg)
 
 ## Value and Array (docs/JSON_Value_and_Array.svg) 
