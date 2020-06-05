@@ -1,5 +1,5 @@
 # JSON Reader CPP
-This is a minimal C++ JSON reader based on a pushdown automaton (with some tweaks). The code makes only one pass, building a JSON tree in code as it goes.
+This is a minimal C++ JSON reader, based on a pushdown automata (with some tweaks). The code makes only one pass, building a JSON tree in code as it goes.
 
 There are no dependancies (besides for the C++17 STL), and should compile cross-platform without any issues.
 
