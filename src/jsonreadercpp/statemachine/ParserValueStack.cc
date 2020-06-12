@@ -125,12 +125,26 @@ namespace jsonreadercpp
 
     void ParserValueStack::CollectUnicodeCodePoint(char input_char)
     {
-        std::stringstream ss;
-        ss << input_char;
-
         //convert the hex char to a number       
         unsigned char hex_num;
-        ss >> std::hex >> hex_num;
+        
+        if (input_char >= '0' && input_char <= '9')
+        {
+            hex_num = (input_char - '0');
+        }
+        else
+        {
+            switch (input_char)
+            {
+                case 'a': case 'A': hex_num = 10; break;
+                case 'b': case 'B': hex_num = 11; break;
+                case 'c': case 'C': hex_num = 12; break;
+                case 'd': case 'D': hex_num = 13; break;
+                case 'e': case 'E': hex_num = 14; break;
+                case 'f': case 'F': hex_num = 15; break;
+            }
+        }
+        
 
         //each hex digit represents 1/2 a byte, so shift by 4
         this->unicode_code_point_ = (this->unicode_code_point_ << 4) | (hex_num & 0x0F);
