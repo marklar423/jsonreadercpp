@@ -6,7 +6,7 @@ using std::string;
 
 namespace jsonreadercpp 
 {    
-    string JValue::AsString() const
+    string JValue::ConvertToString() const
     {
         switch (this->value_type_)
         {

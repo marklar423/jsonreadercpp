@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
 
 void PrintJsonTree(const JValue& root, string prefix) 
 {
-
 	if (root.GetNumberOfChildren() > 0)
 	{
 		if (root.GetValueType() == JValueType::Array)
@@ -50,7 +49,7 @@ void PrintJsonTree(const JValue& root, string prefix)
 	}
 }
 
-void PrintJValue(const string& name, const JValue& value, string prefix = "")
+void PrintJValue(const string& name, const JValue& value, string prefix)
 {
 	cout << prefix << "[" << name << "]: ";
 
@@ -61,7 +60,7 @@ void PrintJValue(const string& name, const JValue& value, string prefix = "")
 	else if (value.GetValueType() == JValueType::Null)
 		cout << "[null]\n";
 	else
-		cout << value.AsString() << "\n";
+		cout << value.ConvertToString() << "\n";
 	
 	if (value.GetNumberOfChildren() > 0)
 	{

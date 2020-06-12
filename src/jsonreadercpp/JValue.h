@@ -28,13 +28,13 @@ namespace jsonreadercpp
             JValue()  : JValue(JValueType::Null, {}) {}
 
             //create an object
-            explicit JValue(std::unordered_map<std::string, JValue> children) : JValue(JValueType::Object, {children}) {}
+            explicit JValue(std::unordered_map<std::string, JValue> children) : JValue(JValueType::Object, {std::move(children)}) {}
 
             //create an array
-            explicit JValue(std::vector<JValue> children) : JValue(JValueType::Array, {children}) {}
+            explicit JValue(std::vector<JValue> children) : JValue(JValueType::Array, {std::move(children)}) {}
 
             //create a scalar value
-            explicit JValue(std::string value) : JValue(JValueType::String, {value}) {}
+            explicit JValue(std::string value) : JValue(JValueType::String, {std::move(value)}) {}
             explicit JValue(double value)      : JValue(JValueType::Number, {value}) {}
             explicit JValue(bool value)        : JValue(JValueType::Boolean, {value}) {}
 
@@ -46,10 +46,14 @@ namespace jsonreadercpp
             JValue(JValue&& other) = default;
             JValue& operator=(JValue&& other) = default;
 
-            //this converts scalar values to a string as well 
-            std::string AsString()  const;            
-            double      AsNumber()  const { return std::get<double>(this->value_); }
-            bool        AsBoolean() const { return std::get<bool>(this->value_);   }
+            //converts scalar values to a string. JValueType::Null values convert to a blank string
+            std::string ConvertToString()  const;           
+
+            //value getters
+            const std::string& AsString() const { return std::get<std::string>(this->value_); }
+
+            double AsNumber()  const { return std::get<double>(this->value_); }
+            bool   AsBoolean() const { return std::get<bool>(this->value_);   }
 
             auto& AsObject() { return std::get<object_t>(value_); }
             auto& AsArray()  { return std::get<array_t>(value_); }
@@ -57,8 +61,9 @@ namespace jsonreadercpp
             const auto& AsObjectConst() const { return std::get<object_t>(value_); }
             const auto& AsArrayConst()  const { return std::get<array_t>(value_); }
 
-            JValueType GetValueType() const noexcept { return value_type_; }      
-            bool IsScalarValue() const noexcept { return !(value_type_ == JValueType::Object || value_type_ == JValueType::Array); }
+            //metadata
+            JValueType GetValueType()  const noexcept { return value_type_; }      
+            bool       IsScalarValue() const noexcept { return !(value_type_ == JValueType::Object || value_type_ == JValueType::Array); }
 
             size_t GetNumberOfChildren() const noexcept
             { 
@@ -76,9 +81,25 @@ namespace jsonreadercpp
             using object_t = std::unordered_map<std::string, JValue>;
             using array_t  = std::vector<JValue>;
             using value_t  = std::variant<std::monostate, std::string, double, bool, object_t, array_t>;
-
+            
             value_t value_;
             JValueType value_type_;
+
+            JValue(JValueType value_type, value_t value) 
+                    : value_type_(value_type), value_(std::move(value)) { }
+                        
+            static constexpr JValueType GetVIndexJValueType(size_t vindex)
+            {
+                switch (vindex)
+                {
+                    case 0: return JValueType::Null;
+                    case 1: return JValueType::String;
+                    case 2: return JValueType::Number;
+                    case 3: return JValueType::Boolean;
+                    case 4: return JValueType::Object;
+                    case 5: return JValueType::Array;
+                }
+            }
     };
 }
 

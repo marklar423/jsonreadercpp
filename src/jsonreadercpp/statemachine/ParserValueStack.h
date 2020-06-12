@@ -4,7 +4,6 @@
 #include <stack>
 #include <string>
 #include <sstream>
-#include <optional>
 
 #include "jsonreadercpp/JValue.h"
 #include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
@@ -17,7 +16,7 @@ namespace jsonreadercpp
             void AccumulateInput(char input_char, ParserCharDestination destination, ParserStateType current_state_type);
             void PushJValue(JValueType type);
             void PopJValue();
-            std::optional<JValue> RemoveRootValue();
+            JValue RemoveRootValue();
             
             size_t GetSize() const { return value_stack_.size(); }
 

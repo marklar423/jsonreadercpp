@@ -69,7 +69,7 @@ namespace jsonreadercpp
             {
                 error_output_stream_ << "Error: Unexpected end of input, JSON isn't complete\n";            
             }
-            else
+            else if (value_stack.GetSize() == 1)
             {
                 result = value_stack.RemoveRootValue();
             }

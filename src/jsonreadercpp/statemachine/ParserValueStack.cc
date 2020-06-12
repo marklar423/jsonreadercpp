@@ -25,26 +25,30 @@ namespace jsonreadercpp
 
     void ParserValueStack::PushJValue(JValueType type)
     {
-        optional<JValue> new_value;
+        JValue new_value; //default is JValueType::Null
 
-        if (type == JValueType::Array || type == JValueType::Object || type == JValueType::Null)
+        if (type == JValueType::Object)
         {
-            new_value.emplace(type);
+            new_value = JValue(std::unordered_map<std::string, JValue>{});
+        }
+        else if (type == JValueType::Array)
+        {
+            new_value = JValue(std::vector<JValue>{});
         }
         else
         {
             string accumulated_chars = this->scalar_value_.str();
 
             if (type == JValueType::String)
-                new_value.emplace(accumulated_chars);
+                new_value = JValue(accumulated_chars);
             else if (type == JValueType::Number)
-                new_value.emplace(std::stod(accumulated_chars));
+                new_value = JValue(std::stod(accumulated_chars));
             else if (type == JValueType::Boolean)
-                new_value.emplace(accumulated_chars == "true");
+                new_value = JValue(accumulated_chars == "true");
         }
 
         //add the new value to the top of the stack
-        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value.value()));
+        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value));
         
         //clear the accumulated values
         this->property_name_.str("");
@@ -62,27 +66,18 @@ namespace jsonreadercpp
             auto& parent_value = parent_pair.second;
 
             if (parent_value.GetValueType() == JValueType::Array)
-            {
                 parent_value.AsArray().emplace_back(std::move(top_value.second));
-            }
+
             else if (parent_value.GetValueType() == JValueType::Object)
-            {
                 parent_value.AsObject().insert(std::move(top_value));
-            }
         }
     }
 
     
-    optional<JValue> ParserValueStack::RemoveRootValue()
+    JValue ParserValueStack::RemoveRootValue()
     {
-        optional<JValue> result;
-
-        if (value_stack_.size() == 1)
-        {
-            result.emplace(std::move(value_stack_.top().second));
-            value_stack_.pop();
-        }
-
+        JValue result(std::move(value_stack_.top().second));
+        value_stack_.pop();
         return result;
     }
 
