@@ -16,11 +16,13 @@ namespace jsonreadercpp
 
     optional<JValue> JsonReader::ParseJsonString(std::istream& input) 
     {        
+        //set up state machine
         auto current_state_type = ParserStateType::Start;
 
         ParserValueStack value_stack;
         ParserMachineStack machine_stack;
         
+        //loop and status vars
         char processed_char = '\0';
         bool finished_input = false, has_error = false;
 
@@ -32,9 +34,10 @@ namespace jsonreadercpp
         {   
             if (debug_output_)
                 debug_output_stream_ << '[' << char_num << ']' << processed_char << " => " << ParserStateTypeName(current_state_type) << "\n";
-
+            
             if (current_state_type == ParserStateType::Error)
             {
+                //the error state was encountered - there was a parsing error
                 error_output_stream_ << "Error: Unexpected \"" << processed_char << "\""
                                      << " at Line:" << line_num << ", Line Position:" << (char_num - line_char_start) 
                                      << ", Global Position:" << char_num << "\n";                
@@ -42,6 +45,7 @@ namespace jsonreadercpp
             }
             else
             {        
+                //(potentially) read next char and get next state 
                 auto next_transition_container = ProcessState(input, current_state_type, value_stack, machine_stack);
 
                 processed_char = next_transition_container.processed_char;
@@ -67,7 +71,7 @@ namespace jsonreadercpp
             }
             else
             {
-                result = std::move(value_stack.RemoveRootValue());
+                result = value_stack.RemoveRootValue();
             }
         }
 
@@ -80,6 +84,7 @@ namespace jsonreadercpp
         //get next state
         auto stack_symbol = (machine_stack.GetSize() > 0) ? machine_stack.GetTop() : ParserStackSymbol::None;   
 
+        //(potentially) read next char and get the transition 
         auto next_transition_container = states_manager_.GetNextTransition(current_state_type, input, stack_symbol);
         const auto& next_transition = next_transition_container.transition;
 
