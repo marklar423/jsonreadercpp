@@ -63,11 +63,11 @@ namespace jsonreadercpp
 
             if (parent_value.GetValueType() == JValueType::Array)
             {
-                parent_value.AddArrayChild(std::move(top_value.second));
+                parent_value.AsArray().emplace_back(std::move(top_value.second));
             }
             else if (parent_value.GetValueType() == JValueType::Object)
             {
-                parent_value.AddObjectChild(std::move(top_value.first), std::move(top_value.second));
+                parent_value.AsObject().insert(std::move(top_value));
             }
         }
     }
