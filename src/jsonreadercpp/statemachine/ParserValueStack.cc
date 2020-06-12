@@ -3,6 +3,8 @@
 #include <clocale>
 #include <cstdlib>
 #include <ios>
+#include <sstream>
+#include <cuchar>
 
 using std::string;
 using std::pair;
@@ -17,9 +19,9 @@ namespace jsonreadercpp
         if (input_char != '\0')
         {          
             if (destination == ParserCharDestination::Name)
-                this->property_name_ << input_char;
+                this->property_name_ += input_char;
             else if (destination == ParserCharDestination::Value)
-                this->scalar_value_ << input_char;            
+                this->scalar_value_ += input_char;            
         }
     }
 
@@ -37,22 +39,20 @@ namespace jsonreadercpp
         }
         else
         {
-            string accumulated_chars = this->scalar_value_.str();
-
             if (type == JValueType::String)
-                new_value = JValue(accumulated_chars);
+                new_value = JValue(std::move(scalar_value_));
             else if (type == JValueType::Number)
-                new_value = JValue(std::stod(accumulated_chars));
+                new_value = JValue(std::stod(std::move(scalar_value_)));
             else if (type == JValueType::Boolean)
-                new_value = JValue(accumulated_chars == "true");
+                new_value = JValue(scalar_value_ == "true");
         }
 
         //add the new value to the top of the stack
-        this->value_stack_.emplace(this->property_name_.str(), std::move(new_value));
+        this->value_stack_.emplace(std::move(property_name_), std::move(new_value));
         
         //clear the accumulated values
-        this->property_name_.str("");
-        this->scalar_value_.str("");
+        this->property_name_ = string{};
+        this->scalar_value_ = string{};
     }
 
     void ParserValueStack::PopJValue()
@@ -99,9 +99,9 @@ namespace jsonreadercpp
         {
             //we have a previously collected unicode code point, save it now            
             if (this->unicode_destination_ == ParserCharDestination::Name)
-                this->property_name_ << TranslatUnicodeCodePoint();
+                this->property_name_ += TranslatUnicodeCodePoint();
             else if (this->unicode_destination_ == ParserCharDestination::Value)
-                this->scalar_value_ << TranslatUnicodeCodePoint();  
+                this->scalar_value_ += TranslatUnicodeCodePoint();  
 
             this->unicode_code_point_ = 0;
         }
@@ -138,11 +138,11 @@ namespace jsonreadercpp
 
     std::string ParserValueStack::TranslatUnicodeCodePoint()
     {
-        //reset the conversion state
-        std::wctomb(nullptr, 0); 
+        std::mbstate_t state;
+        string utf_chars(MB_CUR_MAX, char{});
 
-        std::string utf_chars(MB_CUR_MAX, '\0');
-        int num_bytes = std::wctomb(&utf_chars[0], unicode_code_point_);        
+        size_t num_bytes = std::c32rtomb(utf_chars.data(), unicode_code_point_, &state);
+        utf_chars.resize(num_bytes);
 
         return utf_chars;
     }

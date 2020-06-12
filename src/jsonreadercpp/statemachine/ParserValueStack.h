@@ -3,7 +3,6 @@
 
 #include <stack>
 #include <string>
-#include <sstream>
 
 #include "jsonreadercpp/JValue.h"
 #include "jsonreadercpp/statemachine/ParserStatesSymbols.h"
@@ -22,11 +21,11 @@ namespace jsonreadercpp
 
         private:
             std::stack<std::pair<std::string, JValue>> value_stack_;
-            std::stringstream property_name_;
-            std::stringstream scalar_value_;  
+            std::string property_name_;
+            std::string scalar_value_;  
             
             //collected unicode digits
-            wchar_t unicode_code_point_ = 0;
+            char32_t unicode_code_point_ = 0;
             ParserCharDestination unicode_destination_;
 
             char ProcessEscapeCharInput(char input_char, ParserCharDestination destination, ParserStateType current_state_type);
