@@ -28,8 +28,6 @@ namespace jsonreadercpp
 
         int line_num = 1, char_num = 0, line_char_start = 0;
         
-        input >> std::noskipws;
-
         while (!finished_input && !has_error) 
         {   
             if (debug_output_)

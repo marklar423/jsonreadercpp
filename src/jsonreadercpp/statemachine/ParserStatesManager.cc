@@ -32,7 +32,7 @@ namespace jsonreadercpp
             else
             {
                 char c = '\0';
-                if (input >> c)
+                if (input.get(c))
                 {              
                     ParserInputSymbol input_symbol = jsonreadercpp::CharToInputSymbol(c);
 
