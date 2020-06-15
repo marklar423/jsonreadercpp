@@ -32,5 +32,7 @@ namespace jsonreadercpp
                                                                 ParserValueStack& value_stack, ParserMachineStack& machine_stack);
             
     };
+
+    std::istream& operator>>(std::istream& input, JValue& value);
 }
 #endif

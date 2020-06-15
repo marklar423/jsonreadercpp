@@ -108,4 +108,21 @@ namespace jsonreadercpp
 
         return next_transition_container;
     } 
+
+
+    std::istream& operator>>(std::istream& input, JValue& value)
+    {
+        if (input)
+        {
+            JsonReader reader;
+
+            if (auto parsed_value = reader.ParseJsonString(input); parsed_value.has_value())
+                value = std::move(parsed_value.value());
+                
+            else
+                input.setstate(std::ios_base::failbit);            
+        }
+
+        return input;
+    }
 }
