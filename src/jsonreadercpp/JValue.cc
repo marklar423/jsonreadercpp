@@ -8,7 +8,7 @@ namespace jsonreadercpp
 {    
     string JValue::ConvertToString() const
     {
-        switch (this->value_type_)
+        switch (this->GetValueType())
         {
             case JValueType::String:  return std::get<string>(this->value_) ;
             case JValueType::Number:  return std::to_string(AsNumber());

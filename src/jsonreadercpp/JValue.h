@@ -7,6 +7,7 @@
 #include <iterator>
 #include <variant>
 #include <optional>
+#include <memory>
 
 namespace jsonreadercpp 
 {
@@ -25,18 +26,18 @@ namespace jsonreadercpp
     {
         public:        
             //create a null value
-            JValue()  : JValue(JValueType::Null, {}) {}
+            JValue()  : JValue(value_t{}) {}
 
             //create an object
-            explicit JValue(std::unordered_map<std::string, JValue> children) : JValue(JValueType::Object, {std::move(children)}) {}
+            explicit JValue(std::unordered_map<std::string, std::unique_ptr<JValue>> children) : JValue(value_t{std::move(children)}) {}
 
             //create an array
-            explicit JValue(std::vector<JValue> children) : JValue(JValueType::Array, {std::move(children)}) {}
+            explicit JValue(std::vector<JValue> children) : JValue(value_t{std::move(children)}) {}
 
             //create a scalar value
-            explicit JValue(std::string value) : JValue(JValueType::String, {std::move(value)}) {}
-            explicit JValue(double value)      : JValue(JValueType::Number, {value}) {}
-            explicit JValue(bool value)        : JValue(JValueType::Boolean, {value}) {}
+            explicit JValue(std::string value) : JValue(value_t{std::move(value)}) {}
+            explicit JValue(double value)      : JValue(value_t{value}) {}
+            explicit JValue(bool value)        : JValue(value_t{value}) {}
 
             //copy
             JValue(const JValue& other) = default;
@@ -62,31 +63,30 @@ namespace jsonreadercpp
             const auto& AsArrayConst()  const { return std::get<array_t>(value_); }
 
             //metadata
-            JValueType GetValueType()  const noexcept { return value_type_; }      
-            bool       IsScalarValue() const noexcept { return !(value_type_ == JValueType::Object || value_type_ == JValueType::Array); }
+            JValueType GetValueType()  const noexcept { return GetVIndexJValueType(value_.index()); }      
+            bool       IsScalarValue() const noexcept { return !(GetValueType() == JValueType::Object || GetValueType() == JValueType::Array); }
 
             size_t GetNumberOfChildren() const noexcept
             { 
-                if (value_type_ == JValueType::Object) return AsObjectConst().size();
-                else if (value_type_ == JValueType::Array) return AsArrayConst().size(); 
+                auto value_type = GetValueType();
+                if (value_type == JValueType::Object) return AsObjectConst().size();
+                else if (value_type == JValueType::Array) return AsArrayConst().size(); 
                 return 0;
             }
             
             //get an array child by index
             const JValue& operator[](size_t index) const noexcept { return  AsArrayConst()[index]; }
             //get an object property by name
-            const JValue& operator[](const std::string& name) const { return AsObjectConst().at(name); }
+            const JValue& operator[](const std::string& name) const { return *(AsObjectConst().at(name)); }
 
         private:
-            using object_t = std::unordered_map<std::string, JValue>;
+            using object_t = std::unordered_map<std::string, std::unique_ptr<JValue>>;
             using array_t  = std::vector<JValue>;
             using value_t  = std::variant<std::monostate, std::string, double, bool, object_t, array_t>;
             
             value_t value_;
-            JValueType value_type_;
 
-            JValue(JValueType value_type, value_t value) 
-                    : value_type_(value_type), value_(std::move(value)) { }
+            JValue(value_t value) : value_(std::move(value)) { }
                         
             static constexpr JValueType GetVIndexJValueType(size_t vindex)
             {

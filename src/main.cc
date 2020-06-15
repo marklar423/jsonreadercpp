@@ -43,7 +43,7 @@ void PrintJsonTree(const JValue& root, string prefix)
 		{
 			for (const auto& kvp : root.AsObjectConst()) 
 			{				
-				PrintJValue(kvp.first, kvp.second, prefix);
+				PrintJValue(kvp.first, *kvp.second, prefix);
 			}
 		}
 	}

@@ -3,8 +3,8 @@
 #include <clocale>
 #include <cstdlib>
 #include <ios>
-#include <sstream>
 #include <cuchar>
+#include <memory>
 
 using std::string;
 using std::pair;
@@ -31,7 +31,7 @@ namespace jsonreadercpp
 
         if (type == JValueType::Object)
         {
-            new_value = JValue(std::unordered_map<std::string, JValue>{});
+            new_value = JValue(std::unordered_map<std::string, std::unique_ptr<JValue>>{});
         }
         else if (type == JValueType::Array)
         {
@@ -69,7 +69,7 @@ namespace jsonreadercpp
                 parent_value.AsArray().emplace_back(std::move(top_value.second));
 
             else if (parent_value.GetValueType() == JValueType::Object)
-                parent_value.AsObject().insert(std::move(top_value));
+                parent_value.AsObject().insert({ std::move(top_value.first), std::make_unique<JValue>(std::move(top_value.second)) });
         }
     }
 
