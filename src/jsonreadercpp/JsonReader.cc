@@ -117,10 +117,14 @@ namespace jsonreadercpp
             JsonReader reader;
 
             if (auto parsed_value = reader.ParseJsonString(input); parsed_value.has_value())
+            {
                 value = std::move(parsed_value.value());
-                
+                input.clear();
+            }
             else
+            {
                 input.setstate(std::ios_base::failbit);            
+            }
         }
 
         return input;

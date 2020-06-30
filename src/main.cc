@@ -14,19 +14,16 @@ void PrintJsonTree(const JValue& root, string prefix = "");
 
 int main(int argc, char *argv[])
 {
-	//example using >> operator
+	//This example uses the >> operator, 
+	//but alternatively a singleton JsonReader can be created and reused by calling JsonReader::ParseJsonString(input_stream)
+	//This skips creating the internal state machine graph over and over again every time JSON is parsed		
 	JValue parsed_value;
-	cin >> parsed_value;
 	
-	//alternatively, a singleton JsonReader can be created and reused by calling JsonReader::ParseJsonString(input_stream)
-	//this skips creating the internal state machine graph over and over again every time JSON is parsed
-	
-	if (parsed_value.GetValueType() != JValueType::Null)
+	if (cin >> parsed_value) //alternatively if (parsed_value.GetValueType() != JValueType::Null)
 		PrintJsonTree(parsed_value);
 	else
 		cout << "No root object in JSON\n";
 	
-
 	return 0;
 }
 
